@@ -1,0 +1,9 @@
+db:
+  host: 'localhost'
+  username: 'develop'
+  password: 'develop'
+  synchronize: true,
+  database: 'e2e_cerpo_test'
+
+jwt:
+  secret: 'secretKey'

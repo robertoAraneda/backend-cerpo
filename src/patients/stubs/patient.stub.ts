@@ -1,0 +1,16 @@
+export const PatientStub = {
+  rut: '15549763-7',
+  given: 'CLAUDIA ANDREA',
+  fatherFamily: 'CONTRERAS',
+  motherFamily: 'MELLADO',
+  email: 'kuyenko@gmail.com',
+  address: 'JUAN ENRIQUE RODO 05080',
+  birthdate: '1984-06-25',
+  phone: '45-3453456',
+  mobile: '958639620',
+  deletedAt: null,
+  id: '2b68c3db-2c03-4be8-b944-1be17ecb99d3',
+  active: true,
+  createdAt: '2021-09-28T13:34:28.441Z',
+  updatedAt: '2021-09-28T13:34:28.441Z',
+};
