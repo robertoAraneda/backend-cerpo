@@ -6,40 +6,59 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { OrganizationsService } from '../services/organizations.service';
 import { CreateOrganizationDto } from '../dto/create-organization.dto';
 import { UpdateOrganizationDto } from '../dto/update-organization.dto';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { Role } from '../../auth/role.enum';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { GetUser } from '../../auth/decorators/get-user.decorator';
+import { UserAuthInterface } from '../../auth/interfaces/user-auth.interface';
+import { GetOrganizationsFilterDto } from '../dto/get-organizations-filter.dto';
+import { Organization } from '../entities/organization.entity';
 
 @Controller('organizations')
+@Roles(Role.ADMIN)
+@UseGuards(JwtAuthGuard)
 export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Post()
-  create(@Body() createOrganizationDto: CreateOrganizationDto) {
-    return this.organizationsService.create(createOrganizationDto);
+  createOrganization(
+    @Body() createOrganizationDto: CreateOrganizationDto,
+  ): Promise<Organization> {
+    return this.organizationsService.createOrganization(createOrganizationDto);
   }
 
   @Get()
-  findAll() {
-    return this.organizationsService.findAll();
+  getOrganizations(
+    @GetUser() user: UserAuthInterface,
+    @Query() filterDto: GetOrganizationsFilterDto,
+  ): Promise<Organization[]> {
+    return this.organizationsService.getOrganizations(filterDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.organizationsService.findOne(+id);
+  getOrganizationById(@Param('id') id: string): Promise<Organization> {
+    return this.organizationsService.getOrganizationById(id);
   }
 
   @Patch(':id')
-  update(
+  updateOrganization(
     @Param('id') id: string,
     @Body() updateOrganizationDto: UpdateOrganizationDto,
-  ) {
-    return this.organizationsService.update(+id, updateOrganizationDto);
+  ): Promise<Organization> {
+    return this.organizationsService.updateOrganization(
+      id,
+      updateOrganizationDto,
+    );
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.organizationsService.remove(+id);
+  removeOrganization(@Param('id') id: string): Promise<void> {
+    return this.organizationsService.removeOrganization(id);
   }
 }

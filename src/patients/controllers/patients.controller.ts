@@ -24,6 +24,8 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { UserAuthInterface } from '../../auth/interfaces/user-auth.interface';
 
 @Controller('patients')
+@Roles(Role.ADMIN)
+@UseGuards(RolesGuard)
 @UseGuards(JwtAuthGuard)
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}
@@ -35,8 +37,6 @@ export class PatientsController {
   }
 
   @Get()
-  @Roles(Role.ADMIN)
-  @UseGuards(RolesGuard)
   getPatients(
     @GetUser() user: UserAuthInterface,
     @Query() filterDto: GetPatientsFilterDto,
