@@ -1,20 +1,20 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { PatientsService } from '../src/patients/services/patients.service';
 import { UsersService } from '../src/users/services/users.service';
 import { Connection } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import { AuthModule } from '../src/auth/auth.module';
-import { PatientsModule } from '../src/patients/patients.module';
 import { Role } from '../src/auth/role.enum';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import * as request from 'supertest';
-import { CreatePatientDto } from '../src/patients/dto/create-patient.dto';
-import { Patient } from '../src/patients/entities/patient.entity';
-import { UpdatePatientDto } from '../src/patients/dto/update-patient.dto';
+import { User } from '../src/users/entities/user.entity';
+import { UpdateUserDto } from '../src/users/dto/update-user.dto';
 import { UsersModule } from '../src/users/users.module';
+import { CreateUserDto } from '../src/users/dto/create-user.dto';
+import { UserStub } from '../src/users/stubs/user.stub';
+import { GetUsersFilterDto } from '../src/users/dto/get-users-filter.dto';
 
-describe('PatientController (e2e)', () => {
+describe('UserController (e2e)', () => {
   let app: INestApplication;
   let authToken;
   let service: UsersService;
@@ -31,34 +31,22 @@ describe('PatientController (e2e)', () => {
 
     await connection.synchronize(true);
 
-    //const patients = await service.getPatients({});
-    await userService.createUser({
-      rut: '15654738-7',
+    //const users = await service.getUsers({});
+    await service.createUser({
+      rut: '10669322-6',
       given: 'ROBERTO ALEJANDRO',
       fatherFamily: 'ARANEDA',
       motherFamily: 'ESPINOZA',
-      email: 'robaraneda@gmail.com',
+      email: 'robaraneda@yahoo.es',
       password: 'admin',
       role: Role.ADMIN,
-    });
-
-    await service.createPatient({
-      rut: '15654738-7',
-      address: 'AMUNATEGUI 890',
-      birthdate: '1983-12-06',
-      mobile: '+56958639620',
-      phone: '45-2559023',
-      given: 'ROBERTO ALEJANDRO',
-      fatherFamily: 'ARANEDA',
-      motherFamily: 'ESPINOZA',
-      email: 'robaraneda@gmail.com',
     });
 
     await app.init();
   });
 
   it('return an authorization token', async () => {
-    const authInfo: AuthLoginDto = { rut: '15654738-7', password: 'admin' };
+    const authInfo: AuthLoginDto = { rut: '10669322-6', password: 'admin' };
     const response = await request(app.getHttpServer())
       .post('/auth/login')
       .send(authInfo);
@@ -70,195 +58,203 @@ describe('PatientController (e2e)', () => {
     authToken = response.body.access_token;
   });
 
-  it('/patients (POST)', async () => {
-    const patient: CreatePatientDto = {
+  it('/users (POST)', async () => {
+    const user: CreateUserDto = {
       rut: '15549763-7',
-      address: 'JUAN ENRIQUE RODO 05080',
-      birthdate: '1984-06-25',
-      mobile: '+56988558845',
-      phone: '45-2559023',
       given: 'CLAUDIA ANDREA',
       fatherFamily: 'CONTRERAS',
       motherFamily: 'MELLADO',
       email: 'kuyenko@yahoo.es',
+      role: Role.ADMIN,
+      password: 'admin',
     };
+
     const response = await request(app.getHttpServer())
-      .post('/patients')
+      .post('/users')
       .set('Authorization', `Bearer ${authToken}`)
-      .send(patient)
+      .send(user)
       .expect(HttpStatus.CREATED);
 
-    expect(response.body.rut).toBe(patient.rut);
-    expect(response.body.given).toBe(patient.given);
-    expect(response.body.fatherFamily).toBe(patient.fatherFamily);
-    expect(response.body.motherFamily).toBe(patient.motherFamily);
+    expect(response.body.rut).toBe(user.rut);
+    expect(response.body.given).toBe(user.given);
+    expect(response.body.fatherFamily).toBe(user.fatherFamily);
+    expect(response.body.motherFamily).toBe(user.motherFamily);
   });
 
-  it('/patients (GET)', async () => {
+  it('/users (GET)', async () => {
     const response = await request(app.getHttpServer())
-      .get('/patients')
+      .get('/users')
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
     const resources = response.body;
 
-    const patients = await service.getPatients({});
+    const users = await service.getUsers({});
 
-    expect(resources).toHaveLength(patients.length);
+    expect(resources).toHaveLength(users.length);
   });
 
-  it('/patient/:id (GET)', async () => {
-    const patients = await service.getPatients({});
+  it('/users/:id (GET)', async () => {
+    const users = await service.getUsers({});
 
-    const patient: Patient = patients[0];
+    const user: User = users[0];
 
     const response = await request(app.getHttpServer())
-      .get(`/patients/${patient.id}`)
+      .get(`/users/${user.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
-    const resource: Patient = response.body;
+    const resource: User = response.body;
 
-    expect(resource.id).toBe(patient.id);
+    expect(resource.id).toBe(user.id);
   });
 
-  it('/patient/:id (PATCH)', async () => {
-    const patients = await service.getPatients({});
+  it('/users (GET) with parameters', async () => {
+    const users = await service.getUsers({});
 
-    const patient: Patient = patients[0];
+    const user: User = users[0];
 
-    const updatedPatientDto: UpdatePatientDto = {
-      rut: '16317005-1',
-      address: 'JUAN ENRIQUE RODO 05080',
-      email: 'c.alarconlazo@gmail.com',
+    //buscar un usuario por los parámetros de búsqueda
+    const filterUser: GetUsersFilterDto = {
+      given: user.given,
+      fatherFamily: user.fatherFamily,
+      motherFamily: user.motherFamily,
+      rut: user.rut,
+      email: user.email,
     };
 
     const response = await request(app.getHttpServer())
-      .patch(`/patients/${patient.id}`)
+      .get(`/users`)
+      .query(filterUser)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(updatedPatientDto)
       .expect(HttpStatus.OK);
 
-    const resource: Patient = response.body;
+    const resource: User = response.body.filter(
+      (resource) => resource.id === user.id,
+    )[0];
 
-    expect(resource.id).toBe(patient.id);
-    expect(resource.email).toBe(updatedPatientDto.email);
-    expect(resource.address).toBe(updatedPatientDto.address);
-    expect(resource.rut).toBe(updatedPatientDto.rut);
+    expect(user.id).toBe(resource.id);
   });
 
-  it('/patient/:id (DELETE)', async () => {
-    const patients = await service.getPatients({});
+  it('/user/:id (PATCH)', async () => {
+    const users = await service.getUsers({});
 
-    const patient: Patient = patients[0];
+    const user: User = users[0];
+
+    const updatedUserDto: UpdateUserDto = {
+      rut: '16317005-1',
+      email: 'roberto.araneda@minsal.cl',
+    };
 
     const response = await request(app.getHttpServer())
-      .delete(`/patients/${patient.id}`)
+      .patch(`/users/${user.id}`)
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(updatedUserDto)
+      .expect(HttpStatus.OK);
+
+    const resource: User = response.body;
+
+    expect(resource.id).toBe(user.id);
+    expect(resource.email).toBe(updatedUserDto.email);
+    expect(resource.rut).toBe(updatedUserDto.rut);
+  });
+
+  it('/user/:id (DELETE)', async () => {
+    const users = await service.getUsers({});
+
+    const user: User = users[0];
+
+    const response = await request(app.getHttpServer())
+      .delete(`/users/${user.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
-    const resource: Patient = response.body;
+    const resource: User = response.body;
 
     expect(resource).toStrictEqual({});
   });
 
-  it("It should throw a NotFoundException if patient doesn't exist", async () => {
+  it("It should throw a NotFoundException if user doesn't exist", async () => {
     const unknownUuid = '123e4567-e89b-12d3-a456-426614174000';
 
     const response = await request(app.getHttpServer())
-      .get(`/patients/${unknownUuid}`)
+      .get(`/users/${unknownUuid}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.NOT_FOUND);
 
-    const resource: Patient = response.body;
+    const resource: User = response.body;
 
     const errorResponseExample = {
       statusCode: 404,
-      message: `Patient with ID "${unknownUuid}" not found`,
+      message: `User with ID "${unknownUuid}" not found`,
       error: 'Not Found',
     };
 
     expect(errorResponseExample).toStrictEqual(resource);
   });
 
-  it('It should throw a ConflictException if patient will updated with an existing email', async () => {
-    const patients = await service.getPatients({});
+  it('It should throw a ConflictException if user will updated with an existing email', async () => {
+    const users = await service.getUsers({});
 
-    const createPatientDto: CreatePatientDto = {
-      rut: '10669322-6',
-      address: 'JUAN ENRIQUE RODO 05080',
-      birthdate: '1984-06-25',
-      mobile: '+56988558845',
-      phone: '45-2559023',
-      given: 'CLAUDIA ANDREA',
-      fatherFamily: 'CONTRERAS',
-      motherFamily: 'MELLADO',
-      email: 'robaraneda@gmail.com',
-    };
+    const createUserDto: CreateUserDto = UserStub;
 
-    await service.createPatient(createPatientDto);
+    await service.createUser(createUserDto);
 
-    const patient: Patient = patients[0];
+    const user: User = users[0];
 
-    const updatedPatientDto: UpdatePatientDto = {
-      rut: '16317005-1',
-      address: 'JUAN ENRIQUE RODO 05080',
-      email: createPatientDto.email,
+    const updatedUserDto: UpdateUserDto = {
+      email: createUserDto.email,
     };
 
     const response = await request(app.getHttpServer())
-      .patch(`/patients/${patient.id}`)
+      .patch(`/users/${user.id}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(updatedPatientDto)
+      .send(updatedUserDto)
       .expect(HttpStatus.CONFLICT);
 
-    const resource: Patient = response.body;
+    const resource: User = response.body;
 
     const errorResponseExample = {
       statusCode: 409,
-      message: `Patient with this email "${createPatientDto.email}" already exists.`,
+      message: `User with this email "${createUserDto.email}" already exists.`,
       error: 'Conflict',
     };
 
     expect(errorResponseExample).toStrictEqual(resource);
   });
 
-  it('It should throw a ConflictException if patient will updated with an existing rut', async () => {
-    const patients = await service.getPatients({});
+  it('It should throw a ConflictException if user will updated with an existing rut', async () => {
+    const users = await service.getUsers({});
 
-    const createPatientDto: CreatePatientDto = {
-      rut: '15654738-7',
-      address: 'JUAN ENRIQUE RODO 05080',
-      birthdate: '1984-06-25',
-      mobile: '+56988558845',
-      phone: '45-2559023',
-      given: 'CLAUDIA ANDREA',
-      fatherFamily: 'CONTRERAS',
-      motherFamily: 'MELLADO',
-      email: 'kuyenko@gmail.com',
+    const createUserDto: CreateUserDto = {
+      given: 'Claudia',
+      fatherFamily: 'Alarcón',
+      motherFamily: 'Lazo',
+      rut: '22222222-1',
+      email: 'c.alarconlazo@email.com',
+      role: Role.ADMIN,
+      password: 'admin',
     };
 
-    await service.createPatient(createPatientDto);
+    await service.createUser(createUserDto);
 
-    const patient: Patient = patients[0];
+    const user: User = users[0];
 
-    const updatedPatientDto: UpdatePatientDto = {
-      rut: createPatientDto.rut,
-      address: 'JUAN ENRIQUE RODO 05080',
-      email: 'kuyenko@yahoo.es',
+    const updatedUserDto: UpdateUserDto = {
+      rut: createUserDto.rut,
     };
 
     const response = await request(app.getHttpServer())
-      .patch(`/patients/${patient.id}`)
+      .patch(`/users/${user.id}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(updatedPatientDto)
+      .send(updatedUserDto)
       .expect(HttpStatus.CONFLICT);
 
-    const resource: Patient = response.body;
+    const resource: User = response.body;
 
     const errorResponseExample = {
       statusCode: 409,
-      message: `Patient with this rut "${createPatientDto.rut}" already exists.`,
+      message: `User with this rut "${createUserDto.rut}" already exists.`,
       error: 'Conflict',
     };
 
@@ -267,7 +263,7 @@ describe('PatientController (e2e)', () => {
 
   it('It should throw a BadRequestException if the required parameters were not sent', async () => {
     //El rut del paciente no es enviado en el request
-    const patient = {
+    const user = {
       address: 'JUAN ENRIQUE RODO 05080',
       birthdate: '1984-06-25',
       mobile: '+56988558845',
@@ -278,9 +274,9 @@ describe('PatientController (e2e)', () => {
       email: 'kuyenko@yahoo.es',
     };
     const response = await request(app.getHttpServer())
-      .post('/patients')
+      .post('/users')
       .set('Authorization', `Bearer ${authToken}`)
-      .send(patient)
+      .send(user)
       .expect(HttpStatus.BAD_REQUEST);
 
     expect(response.body.error).toBe('Bad Request');

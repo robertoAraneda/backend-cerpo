@@ -7,7 +7,8 @@
   "coveragePathIgnorePatterns": [
     ".module.ts$",
     ".spec.ts$",
-    "src/main.ts"
+    "src/main.ts",
+    ".stub.ts$"
   ],
   "testRegex": ".e2e-spec.ts$",
   "transform": {

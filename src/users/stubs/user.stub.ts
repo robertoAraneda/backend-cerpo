@@ -5,7 +5,7 @@ export const UserStub: CreateUserDto = {
   given: 'Claudia',
   fatherFamily: 'Alarcón',
   motherFamily: 'Lazo',
-  rut: '16317005-1',
+  rut: '11111111-1',
   email: 'c.alarconlazo@gmail.com',
   role: Role.ADMIN,
   password: 'admin',
