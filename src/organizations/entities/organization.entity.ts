@@ -7,10 +7,11 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { IsUUID } from 'class-validator';
+import { OrganizationTypeEnum } from '../enums/organization-type.enum';
 
-@Entity('patients')
-export class Patient {
-  constructor(partial: Partial<Patient>) {
+@Entity('organizations')
+export class Organization {
+  constructor(partial: Partial<Organization>) {
     Object.assign(this, partial);
   }
 
@@ -19,38 +20,20 @@ export class Patient {
   id: string;
 
   @Column({
-    unique: true,
+    default: true,
   })
-  rut: string;
+  active: boolean;
 
   @Column()
-  given: string;
-
-  @Column({ name: 'father_family' })
-  fatherFamily: string;
-
-  @Column({ name: 'mother_family' })
-  motherFamily: string;
-
-  @Column({ type: 'date' })
-  birthdate: string;
-
-  @Column({ nullable: true })
-  address: string;
-
-  @Column({ nullable: true })
-  phone: string;
-
-  @Column()
-  mobile: string;
+  name: string;
 
   @Column({
-    unique: true,
+    nullable: true,
   })
-  email: string;
+  telecom: string;
 
-  @Column({ type: 'boolean', default: true })
-  active: boolean;
+  @Column()
+  type: OrganizationTypeEnum;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
