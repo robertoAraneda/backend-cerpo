@@ -8,6 +8,7 @@ import { PatientsModule } from './patients/patients.module';
 import { AuthModule } from './auth/auth.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { SystemsModule } from './systems/systems.module';
+import { DeliveryRoutesModule } from './delivery-routes/delivery-routes.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { SystemsModule } from './systems/systems.module';
     AuthModule,
     OrganizationsModule,
     SystemsModule,
+    DeliveryRoutesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
