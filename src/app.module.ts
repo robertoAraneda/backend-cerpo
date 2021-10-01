@@ -7,6 +7,7 @@ import { typeormConfig } from './config/typeorm.config';
 import { PatientsModule } from './patients/patients.module';
 import { AuthModule } from './auth/auth.module';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { SystemsModule } from './systems/systems.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
     PatientsModule,
     AuthModule,
     OrganizationsModule,
+    SystemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

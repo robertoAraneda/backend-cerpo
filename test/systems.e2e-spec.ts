@@ -1,35 +1,34 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { OrganizationsModule } from '../src/organizations/organizations.module';
+import { SystemsModule } from '../src/systems/systems.module';
 import { Connection } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { CreateOrganizationDto } from '../src/organizations/dto/create-organization.dto';
+import { CreateSystemDto } from '../src/systems/dto/create-system.dto';
 import { Role } from '../src/auth/role.enum';
 import { UsersService } from '../src/users/services/users.service';
-import { Organization } from '../src/organizations/entities/organization.entity';
-import { UpdateOrganizationDto } from '../src/organizations/dto/update-organization.dto';
-import { OrganizationsService } from '../src/organizations/services/organizations.service';
-import { OrganizationTypeEnum } from '../src/organizations/enums/organization-type.enum';
-import { OrganizationStub } from '../src/organizations/stubs/organization.stub';
+import { System } from '../src/systems/entities/system.entity';
+import { UpdateSystemDto } from '../src/systems/dto/update-system.dto';
+import { SystemsService } from '../src/systems/services/systems.service';
+import { CreateSystemStub } from '../src/systems/stubs/create-system.stub';
 
-describe('OrganizationsController (e2e)', () => {
+describe('SystemsController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: OrganizationsService;
+  let service: SystemsService;
   let userService: UsersService;
   let connection: Connection;
-  const BASE_URL = '/organizations';
+  const BASE_URL = '/systems';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, OrganizationsModule],
+      imports: [AppModule, AuthModule, SystemsModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<OrganizationsService>(OrganizationsService);
+    service = moduleFixture.get<SystemsService>(SystemsService);
     userService = moduleFixture.get<UsersService>(UsersService);
     connection = app.get(Connection);
 
@@ -45,10 +44,8 @@ describe('OrganizationsController (e2e)', () => {
       role: Role.ADMIN,
     });
 
-    await service.createOrganization({
-      name: 'Organization name 1',
-      telecom: 'Telecom organization 1',
-      type: OrganizationTypeEnum.CONSULTANT,
+    await service.createSystem({
+      name: 'System name 1',
     });
 
     await app.init();
@@ -67,21 +64,19 @@ describe('OrganizationsController (e2e)', () => {
     authToken = response.body.access_token;
   });
 
-  it('/organizations (POST)', async () => {
-    const organization: CreateOrganizationDto = OrganizationStub;
+  it('/systems (POST)', async () => {
+    const system: CreateSystemDto = CreateSystemStub;
 
     const response = await request(app.getHttpServer())
       .post(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(organization)
+      .send(system)
       .expect(HttpStatus.CREATED);
 
-    expect(response.body.name).toBe(organization.name);
-    expect(response.body.telecom).toBe(organization.telecom);
-    expect(response.body.type).toBe(organization.type);
+    expect(response.body.name).toBe(system.name);
   });
 
-  it('/organizations (GET)', async () => {
+  it('/systems (GET)', async () => {
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
@@ -89,63 +84,63 @@ describe('OrganizationsController (e2e)', () => {
 
     const resources = response.body;
 
-    const organizations = await service.getOrganizations({});
+    const systems = await service.getSystems({});
 
-    expect(resources).toHaveLength(organizations.length);
+    expect(resources).toHaveLength(systems.length);
   });
 
-  it('/organization/:id (GET)', async () => {
-    const organizations = await service.getOrganizations({});
+  it('/system/:id (GET)', async () => {
+    const systems = await service.getSystems({});
 
-    const organization: Organization = organizations[0];
+    const system: System = systems[0];
 
     const response = await request(app.getHttpServer())
-      .get(`${BASE_URL}/${organization.id}`)
+      .get(`${BASE_URL}/${system.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
-    const resource: Organization = response.body;
+    const resource: System = response.body;
 
-    expect(resource.id).toBe(organization.id);
+    expect(resource.id).toBe(system.id);
   });
 
-  it('/organization/:id (PATCH)', async () => {
-    const organizations = await service.getOrganizations({});
+  it('/system/:id (PATCH)', async () => {
+    const systems = await service.getSystems({});
 
-    const organization: Organization = organizations[0];
+    const system: System = systems[0];
 
-    const updatedOrganizationDto: UpdateOrganizationDto = {
-      name: 'new name organization',
+    const updatedSystemDto: UpdateSystemDto = {
+      name: 'new name system',
     };
 
     const response = await request(app.getHttpServer())
-      .patch(`${BASE_URL}/${organization.id}`)
+      .patch(`${BASE_URL}/${system.id}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(updatedOrganizationDto)
+      .send(updatedSystemDto)
       .expect(HttpStatus.OK);
 
-    const resource: Organization = response.body;
+    const resource: System = response.body;
 
-    expect(resource.id).toBe(organization.id);
-    expect(resource.name).toBe(updatedOrganizationDto.name);
+    expect(resource.id).toBe(system.id);
+    expect(resource.name).toBe(updatedSystemDto.name);
   });
 
-  it('/organization/:id (DELETE)', async () => {
-    const organizations = await service.getOrganizations({});
+  it('/system/:id (DELETE)', async () => {
+    const systems = await service.getSystems({});
 
-    const organization: Organization = organizations[0];
+    const system: System = systems[0];
 
     const response = await request(app.getHttpServer())
-      .delete(`${BASE_URL}/${organization.id}`)
+      .delete(`${BASE_URL}/${system.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
-    const resource: Organization = response.body;
+    const resource: System = response.body;
 
     expect(resource).toStrictEqual({});
   });
 
-  it("It should throw a NotFoundException if organization doesn't exist", async () => {
+  it("It should throw a NotFoundException if system doesn't exist", async () => {
     const unknownUuid = '123e4567-e89b-12d3-a456-426614174000';
 
     const response = await request(app.getHttpServer())
@@ -153,11 +148,11 @@ describe('OrganizationsController (e2e)', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.NOT_FOUND);
 
-    const resource: Organization = response.body;
+    const resource: System = response.body;
 
     const errorResponseExample = {
       statusCode: 404,
-      message: `Organization with ID "${unknownUuid}" not found`,
+      message: `System with ID "${unknownUuid}" not found`,
       error: 'Not Found',
     };
 
@@ -166,14 +161,13 @@ describe('OrganizationsController (e2e)', () => {
 
   it('It should throw a BadRequestException if the required parameters were not sent', async () => {
     //El nombre de la organización no es enviado en el request
-    const organization = {
-      telecom: 'Telecom for organization 1',
-      type: OrganizationTypeEnum.CONSULTANT,
+    const system = {
+      telecom: 'Telecom for system 1',
     };
     const response = await request(app.getHttpServer())
       .post(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(organization)
+      .send(system)
       .expect(HttpStatus.BAD_REQUEST);
 
     expect(response.body.error).toBe('Bad Request');

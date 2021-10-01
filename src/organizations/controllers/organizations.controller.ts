@@ -10,6 +10,7 @@ import {
   Query,
   UsePipes,
   ValidationPipe,
+  Logger,
 } from '@nestjs/common';
 import { OrganizationsService } from '../services/organizations.service';
 import { CreateOrganizationDto } from '../dto/create-organization.dto';
@@ -22,10 +23,11 @@ import { UserAuthInterface } from '../../auth/interfaces/user-auth.interface';
 import { GetOrganizationsFilterDto } from '../dto/get-organizations-filter.dto';
 import { Organization } from '../entities/organization.entity';
 
-@Controller('organizations')
+@Controller({ version: '1', path: 'organizations' })
 @Roles(Role.ADMIN)
 @UseGuards(JwtAuthGuard)
 export class OrganizationsController {
+  private logger = new Logger('OrganizationsController');
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Post()
@@ -41,6 +43,7 @@ export class OrganizationsController {
     @GetUser() user: UserAuthInterface,
     @Query() filterDto: GetOrganizationsFilterDto,
   ): Promise<Organization[]> {
+    this.logger.verbose(`User "${user.given}" retrieving all organizations`);
     return this.organizationsService.getOrganizations(filterDto);
   }
 

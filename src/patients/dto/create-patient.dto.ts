@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreatePatientDto {
   @IsNotEmpty() @IsString() rut: string;
@@ -7,7 +7,7 @@ export class CreatePatientDto {
   @IsNotEmpty() @IsString() motherFamily: string;
   @IsNotEmpty() @IsString() mobile: string;
   @IsNotEmpty() @IsString() birthdate: string;
-  @IsEmail() @IsNotEmpty() email?: string;
-  @IsString() address?: string;
-  @IsString() phone?: string;
+  @IsOptional() @IsEmail() email?: string;
+  @IsOptional() @IsString() address?: string;
+  @IsOptional() @IsString() phone?: string;
 }
