@@ -7,7 +7,6 @@ import { UserAuthInterface } from '../../auth/interfaces/user-auth.interface';
 import { CreateOrganizationDto } from '../dto/create-organization.dto';
 import { UpdateOrganizationDto } from '../dto/update-organization.dto';
 import { OrganizationsRepository } from '../repositories/organizations.repository';
-import { OrganizationTypeEnum } from '../enums/organization-type.enum';
 import { OrganizationStub } from '../stubs/organization.stub';
 
 describe('OrganizationsController', () => {

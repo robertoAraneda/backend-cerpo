@@ -19,6 +19,7 @@ describe('PatientController (e2e)', () => {
   let service: PatientsService;
   let userService: UsersService;
   let connection: Connection;
+  const BASE_URL = '/patients';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -84,7 +85,7 @@ describe('PatientController (e2e)', () => {
       email: 'kuyenko@yahoo.es',
     };
     const response = await request(app.getHttpServer())
-      .post('/patients')
+      .post(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(patient)
       .expect(HttpStatus.CREATED);
@@ -97,7 +98,7 @@ describe('PatientController (e2e)', () => {
 
   it('/patients (GET)', async () => {
     const response = await request(app.getHttpServer())
-      .get('/patients')
+      .get(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
@@ -114,7 +115,7 @@ describe('PatientController (e2e)', () => {
     const patient: Patient = patients[0];
 
     const response = await request(app.getHttpServer())
-      .get(`/patients/${patient.id}`)
+      .get(`${BASE_URL}/${patient.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
@@ -135,7 +136,7 @@ describe('PatientController (e2e)', () => {
     };
 
     const response = await request(app.getHttpServer())
-      .patch(`/patients/${patient.id}`)
+      .patch(`${BASE_URL}/${patient.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(updatedPatientDto)
       .expect(HttpStatus.OK);
@@ -154,7 +155,7 @@ describe('PatientController (e2e)', () => {
     const patient: Patient = patients[0];
 
     const response = await request(app.getHttpServer())
-      .delete(`/patients/${patient.id}`)
+      .delete(`${BASE_URL}/${patient.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
@@ -167,7 +168,7 @@ describe('PatientController (e2e)', () => {
     const unknownUuid = '123e4567-e89b-12d3-a456-426614174000';
 
     const response = await request(app.getHttpServer())
-      .get(`/patients/${unknownUuid}`)
+      .get(`${BASE_URL}/${unknownUuid}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.NOT_FOUND);
 
@@ -208,7 +209,7 @@ describe('PatientController (e2e)', () => {
     };
 
     const response = await request(app.getHttpServer())
-      .patch(`/patients/${patient.id}`)
+      .patch(`${BASE_URL}/${patient.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(updatedPatientDto)
       .expect(HttpStatus.CONFLICT);
@@ -250,7 +251,7 @@ describe('PatientController (e2e)', () => {
     };
 
     const response = await request(app.getHttpServer())
-      .patch(`/patients/${patient.id}`)
+      .patch(`${BASE_URL}/${patient.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(updatedPatientDto)
       .expect(HttpStatus.CONFLICT);
@@ -279,7 +280,7 @@ describe('PatientController (e2e)', () => {
       email: 'kuyenko@yahoo.es',
     };
     const response = await request(app.getHttpServer())
-      .post('/patients')
+      .post(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(patient)
       .expect(HttpStatus.BAD_REQUEST);

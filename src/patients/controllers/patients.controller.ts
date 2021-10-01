@@ -23,7 +23,7 @@ import { Patient } from '../entities/patient.entity';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { UserAuthInterface } from '../../auth/interfaces/user-auth.interface';
 
-@Controller('patients')
+@Controller({ version: '1', path: 'patients' })
 @Roles(Role.ADMIN)
 @UseGuards(RolesGuard)
 @UseGuards(JwtAuthGuard)

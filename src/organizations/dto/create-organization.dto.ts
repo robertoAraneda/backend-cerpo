@@ -2,14 +2,9 @@ import { OrganizationTypeEnum } from '../enums/organization-type.enum';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateOrganizationDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+  @IsNotEmpty() @IsString() name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  type: OrganizationTypeEnum;
+  @IsNotEmpty() @IsString() type: OrganizationTypeEnum;
 
-  @IsString()
-  telecom?: string;
+  @IsString() telecom?: string;
 }

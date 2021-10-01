@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { OrganizationsService } from '../services/organizations.service';
 import { CreateOrganizationDto } from '../dto/create-organization.dto';
@@ -27,6 +29,7 @@ export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Post()
+  @UsePipes(ValidationPipe)
   createOrganization(
     @Body() createOrganizationDto: CreateOrganizationDto,
   ): Promise<Organization> {
@@ -47,6 +50,7 @@ export class OrganizationsController {
   }
 
   @Patch(':id')
+  @UsePipes(ValidationPipe)
   updateOrganization(
     @Param('id') id: string,
     @Body() updateOrganizationDto: UpdateOrganizationDto,
