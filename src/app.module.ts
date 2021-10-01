@@ -10,6 +10,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
 import { SystemsModule } from './systems/systems.module';
 import { DeliveryRoutesModule } from './delivery-routes/delivery-routes.module';
 import { StatusCasesModule } from './status-cases/status-cases.module';
+import { RegionsModule } from './regions/regions.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { StatusCasesModule } from './status-cases/status-cases.module';
     SystemsModule,
     DeliveryRoutesModule,
     StatusCasesModule,
+    RegionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
