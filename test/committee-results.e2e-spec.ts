@@ -1,35 +1,37 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { Connection } from 'typeorm';
 
-import { DeliveryRoutesModule } from '../src/delivery-routes/delivery-routes.module';
+import { Connection } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { CreateDeliveryRouteDto } from '../src/delivery-routes/dto/create-delivery-route.dto';
+import { CreateCommitteeResultDto } from '../src/committee-results/dto/create-committee-result.dto';
 import { Role } from '../src/auth/role.enum';
 import { UsersService } from '../src/users/services/users.service';
-import { DeliveryRoute } from '../src/delivery-routes/entities/delivery-route.entity';
-import { UpdateDeliveryRouteDto } from '../src/delivery-routes/dto/update-delivery-route.dto';
-import { DeliveryRoutesService } from '../src/delivery-routes/services/delivery-routes.service';
-import { CreateDeliveryRouteStub } from '../src/delivery-routes/stubs/create-delivery-route.stub';
+import { CommitteeResult } from '../src/committee-results/entities/committee-result.entity';
+import { UpdateCommitteeResultDto } from '../src/committee-results/dto/update-committee-result.dto';
+import { CommitteeResultsService } from '../src/committee-results/services/committee-results.service';
+import { CreateCommitteeResultStub } from '../src/committee-results/stubs/create-committee-result.stub';
+import { CommitteeResultsModule } from '../src/committee-results/committee-result.module';
 
-describe('DeliveryRoutesController (e2e)', () => {
+describe('CommitteeResultsController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: DeliveryRoutesService;
+  let service: CommitteeResultsService;
   let userService: UsersService;
   let connection: Connection;
-  const BASE_URL = '/delivery-routes';
+  const BASE_URL = '/committee-results';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, DeliveryRoutesModule],
+      imports: [AppModule, AuthModule, CommitteeResultsModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<DeliveryRoutesService>(DeliveryRoutesService);
+    service = moduleFixture.get<CommitteeResultsService>(
+      CommitteeResultsService,
+    );
     userService = moduleFixture.get<UsersService>(UsersService);
     connection = app.get(Connection);
 
@@ -45,8 +47,8 @@ describe('DeliveryRoutesController (e2e)', () => {
       role: Role.ADMIN,
     });
 
-    await service.createDeliveryRoute({
-      name: 'DeliveryRoute name 1',
+    await service.createCommitteeResult({
+      name: 'CommitteeResult name 1',
     });
 
     await app.init();
@@ -65,19 +67,19 @@ describe('DeliveryRoutesController (e2e)', () => {
     authToken = response.body.access_token;
   });
 
-  it('/deliveryRoutes (POST)', async () => {
-    const deliveryRoute: CreateDeliveryRouteDto = CreateDeliveryRouteStub;
+  it('/committeeResults (POST)', async () => {
+    const committeeResult: CreateCommitteeResultDto = CreateCommitteeResultStub;
 
     const response = await request(app.getHttpServer())
       .post(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(deliveryRoute)
+      .send(committeeResult)
       .expect(HttpStatus.CREATED);
 
-    expect(response.body.name).toBe(deliveryRoute.name);
+    expect(response.body.name).toBe(committeeResult.name);
   });
 
-  it('/deliveryRoutes (GET)', async () => {
+  it('/committeeResults (GET)', async () => {
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
@@ -85,75 +87,75 @@ describe('DeliveryRoutesController (e2e)', () => {
 
     const resources = response.body;
 
-    const deliveryRoutes = await service.getDeliveryRoutes({});
+    const committeeResults = await service.getCommitteeResults({});
 
-    expect(resources).toHaveLength(deliveryRoutes.length);
+    expect(resources).toHaveLength(committeeResults.length);
   });
 
-  it('/deliveryRoute/:id (GET)', async () => {
-    const deliveryRoutes = await service.getDeliveryRoutes({});
+  it('/committeeResult/:id (GET)', async () => {
+    const committeeResults = await service.getCommitteeResults({});
 
-    const deliveryRoute: DeliveryRoute = deliveryRoutes[0];
+    const committeeResult: CommitteeResult = committeeResults[0];
 
     const response = await request(app.getHttpServer())
-      .get(`${BASE_URL}/${deliveryRoute.id}`)
+      .get(`${BASE_URL}/${committeeResult.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
-    const resource: DeliveryRoute = response.body;
+    const resource: CommitteeResult = response.body;
 
-    expect(resource.id).toBe(deliveryRoute.id);
+    expect(resource.id).toBe(committeeResult.id);
   });
 
-  it('/deliveryRoute/:id (PATCH)', async () => {
-    const deliveryRoutes = await service.getDeliveryRoutes({});
+  it('/committeeResult/:id (PATCH)', async () => {
+    const committeeResults = await service.getCommitteeResults({});
 
-    const deliveryRoute: DeliveryRoute = deliveryRoutes[0];
+    const committeeResult: CommitteeResult = committeeResults[0];
 
-    const updatedDeliveryRouteDto: UpdateDeliveryRouteDto = {
-      name: 'new name deliveryRoute',
+    const updatedCommitteeResultDto: UpdateCommitteeResultDto = {
+      name: 'new name committeeResult',
     };
 
     const response = await request(app.getHttpServer())
-      .patch(`${BASE_URL}/${deliveryRoute.id}`)
+      .patch(`${BASE_URL}/${committeeResult.id}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(updatedDeliveryRouteDto)
+      .send(updatedCommitteeResultDto)
       .expect(HttpStatus.OK);
 
-    const resource: DeliveryRoute = response.body;
+    const resource: CommitteeResult = response.body;
 
-    expect(resource.id).toBe(deliveryRoute.id);
-    expect(resource.name).toBe(updatedDeliveryRouteDto.name);
+    expect(resource.id).toBe(committeeResult.id);
+    expect(resource.name).toBe(updatedCommitteeResultDto.name);
   });
 
-  it('/deliveryRoute/:id (DELETE)', async () => {
-    const deliveryRoutes = await service.getDeliveryRoutes({});
+  it('/committeeResult/:id (DELETE)', async () => {
+    const committeeResults = await service.getCommitteeResults({});
 
-    const deliveryRoute: DeliveryRoute = deliveryRoutes[0];
+    const committeeResult: CommitteeResult = committeeResults[0];
 
     const response = await request(app.getHttpServer())
-      .delete(`${BASE_URL}/${deliveryRoute.id}`)
+      .delete(`${BASE_URL}/${committeeResult.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
-    const resource: DeliveryRoute = response.body;
+    const resource: CommitteeResult = response.body;
 
     expect(resource).toStrictEqual({});
   });
 
-  it("It should throw a NotFoundException if deliveryRoute doesn't exist", async () => {
-    const unknownUuid = '123e4567-e89b-12d3-a456-426614174000';
+  it("It should throw a NotFoundException if committeeResult doesn't exist", async () => {
+    const unknownUuid = 999;
 
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}/${unknownUuid}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.NOT_FOUND);
 
-    const resource: DeliveryRoute = response.body;
+    const resource: CommitteeResult = response.body;
 
     const errorResponseExample = {
       statusCode: 404,
-      message: `DeliveryRoute with ID "${unknownUuid}" not found`,
+      message: `CommitteeResult with ID "${unknownUuid}" not found`,
       error: 'Not Found',
     };
 
@@ -162,13 +164,13 @@ describe('DeliveryRoutesController (e2e)', () => {
 
   it('It should throw a BadRequestException if the required parameters were not sent', async () => {
     //El nombre de la organización no es enviado en el request
-    const deliveryRoute = {
-      telecom: 'Telecom for deliveryRoute 1',
+    const committeeResult = {
+      telecom: 'Telecom for committeeResult 1',
     };
     const response = await request(app.getHttpServer())
       .post(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(deliveryRoute)
+      .send(committeeResult)
       .expect(HttpStatus.BAD_REQUEST);
 
     expect(response.body.error).toBe('Bad Request');
