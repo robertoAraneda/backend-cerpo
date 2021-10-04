@@ -1,35 +1,35 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { RegionsModule } from '../src/regions/regions.module';
+import { RegionModule } from '../src/region/region.module';
 import { Connection } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { CreateRegionDto } from '../src/regions/dto/create-region.dto';
+import { CreateRegionDto } from '../src/region/dto/create-region.dto';
 import { Role } from '../src/auth/role.enum';
-import { UsersService } from '../src/users/services/users.service';
-import { Region } from '../src/regions/entities/region.entity';
-import { UpdateRegionDto } from '../src/regions/dto/update-region.dto';
-import { RegionsService } from '../src/regions/services/regions.service';
-import { CreateRegionStub } from '../src/regions/stubs/create-region.stub';
+import { UserService } from '../src/user/services/user.service';
+import { Region } from '../src/region/entities/region.entity';
+import { UpdateRegionDto } from '../src/region/dto/update-region.dto';
+import { RegionService } from '../src/region/services/region.service';
+import { CreateRegionStub } from '../src/region/stubs/create-region.stub';
 
-describe('RegionsController (e2e)', () => {
+describe('RegionController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: RegionsService;
-  let userService: UsersService;
+  let service: RegionService;
+  let userService: UserService;
   let connection: Connection;
   const BASE_URL = '/regions';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, RegionsModule],
+      imports: [AppModule, AuthModule, RegionModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<RegionsService>(RegionsService);
-    userService = moduleFixture.get<UsersService>(UsersService);
+    service = moduleFixture.get<RegionService>(RegionService);
+    userService = moduleFixture.get<UserService>(UserService);
     connection = app.get(Connection);
 
     await connection.synchronize(true);
@@ -65,7 +65,7 @@ describe('RegionsController (e2e)', () => {
     authToken = response.body.access_token;
   });
 
-  it('/regions (POST)', async () => {
+  it('/region (POST)', async () => {
     const region: CreateRegionDto = CreateRegionStub;
 
     const response = await request(app.getHttpServer())
@@ -77,7 +77,7 @@ describe('RegionsController (e2e)', () => {
     expect(response.body.name).toBe(region.name);
   });
 
-  it('/regions (GET)', async () => {
+  it('/region (GET)', async () => {
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)

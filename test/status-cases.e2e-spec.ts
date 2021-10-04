@@ -1,35 +1,35 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { StatusCasesModule } from '../src/status-cases/status-cases.module';
+import { StatusCaseModule } from '../src/status-case/status-case.module';
 import { Connection } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { CreateStatusCaseDto } from '../src/status-cases/dto/create-status-case.dto';
+import { CreateStatusCaseDto } from '../src/status-case/dto/create-status-case.dto';
 import { Role } from '../src/auth/role.enum';
-import { UsersService } from '../src/users/services/users.service';
-import { StatusCase } from '../src/status-cases/entities/status-case.entity';
-import { UpdateStatusCaseDto } from '../src/status-cases/dto/update-status-case.dto';
-import { StatusCasesService } from '../src/status-cases/services/status-cases.service';
-import { CreateStatusCaseStub } from '../src/status-cases/stubs/create-status-case.stub';
+import { UserService } from '../src/user/services/user.service';
+import { StatusCase } from '../src/status-case/entities/status-case.entity';
+import { UpdateStatusCaseDto } from '../src/status-case/dto/update-status-case.dto';
+import { StatusCaseService } from '../src/status-case/services/status-case.service';
+import { CreateStatusCaseStub } from '../src/status-case/stubs/create-status-case.stub';
 
-describe('StatusCasesController (e2e)', () => {
+describe('StatusCaseController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: StatusCasesService;
-  let userService: UsersService;
+  let service: StatusCaseService;
+  let userService: UserService;
   let connection: Connection;
   const BASE_URL = '/status-cases';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, StatusCasesModule],
+      imports: [AppModule, AuthModule, StatusCaseModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<StatusCasesService>(StatusCasesService);
-    userService = moduleFixture.get<UsersService>(UsersService);
+    service = moduleFixture.get<StatusCaseService>(StatusCaseService);
+    userService = moduleFixture.get<UserService>(UserService);
     connection = app.get(Connection);
 
     await connection.synchronize(true);
@@ -143,7 +143,7 @@ describe('StatusCasesController (e2e)', () => {
   });
 
   it("It should throw a NotFoundException if statusCase doesn't exist", async () => {
-    const unknownUuid = '123e4567-e89b-12d3-a456-426614174000';
+    const unknownUuid = 999;
 
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}/${unknownUuid}`)

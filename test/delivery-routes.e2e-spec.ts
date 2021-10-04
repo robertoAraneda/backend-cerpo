@@ -3,34 +3,34 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { Connection } from 'typeorm';
 
-import { DeliveryRoutesModule } from '../src/delivery-routes/delivery-routes.module';
+import { DeliveryRouteModule } from '../src/delivery-route/delivery-route.module';
 import { AppModule } from '../src/app.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { CreateDeliveryRouteDto } from '../src/delivery-routes/dto/create-delivery-route.dto';
+import { CreateDeliveryRouteDto } from '../src/delivery-route/dto/create-delivery-route.dto';
 import { Role } from '../src/auth/role.enum';
-import { UsersService } from '../src/users/services/users.service';
-import { DeliveryRoute } from '../src/delivery-routes/entities/delivery-route.entity';
-import { UpdateDeliveryRouteDto } from '../src/delivery-routes/dto/update-delivery-route.dto';
-import { DeliveryRoutesService } from '../src/delivery-routes/services/delivery-routes.service';
-import { CreateDeliveryRouteStub } from '../src/delivery-routes/stubs/create-delivery-route.stub';
+import { UserService } from '../src/user/services/user.service';
+import { DeliveryRoute } from '../src/delivery-route/entities/delivery-route.entity';
+import { UpdateDeliveryRouteDto } from '../src/delivery-route/dto/update-delivery-route.dto';
+import { DeliveryRouteService } from '../src/delivery-route/services/delivery-route.service';
+import { CreateDeliveryRouteStub } from '../src/delivery-route/stubs/create-delivery-route.stub';
 
-describe('DeliveryRoutesController (e2e)', () => {
+describe('DeliveryRouteController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: DeliveryRoutesService;
-  let userService: UsersService;
+  let service: DeliveryRouteService;
+  let userService: UserService;
   let connection: Connection;
   const BASE_URL = '/delivery-routes';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, DeliveryRoutesModule],
+      imports: [AppModule, AuthModule, DeliveryRouteModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<DeliveryRoutesService>(DeliveryRoutesService);
-    userService = moduleFixture.get<UsersService>(UsersService);
+    service = moduleFixture.get<DeliveryRouteService>(DeliveryRouteService);
+    userService = moduleFixture.get<UserService>(UserService);
     connection = app.get(Connection);
 
     await connection.synchronize(true);

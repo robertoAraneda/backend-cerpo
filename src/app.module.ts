@@ -1,32 +1,32 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './config/typeorm.config';
-import { PatientsModule } from './patients/patients.module';
+import { PatientModule } from './patient/patient.module';
 import { AuthModule } from './auth/auth.module';
-import { OrganizationsModule } from './organizations/organizations.module';
-import { SystemsModule } from './systems/systems.module';
-import { DeliveryRoutesModule } from './delivery-routes/delivery-routes.module';
-import { StatusCasesModule } from './status-cases/status-cases.module';
-import { RegionsModule } from './regions/regions.module';
-import { CommitteeResultsModule } from './committee-results/committee-result.module';
-import { PatientDecisionsModule } from './patient-decisions/patient-decisions.module';
+import { OrganizationModule } from './organization/organization.module';
+import { SystemModule } from './system/system.module';
+import { DeliveryRouteModule } from './delivery-route/delivery-route.module';
+import { StatusCaseModule } from './status-case/status-case.module';
+import { RegionModule } from './region/region.module';
+import { CommitteeResultsModule } from './committee-result/committee-result.module';
+import { PatientDecisionModule } from './patient-decision/patient-decision.module';
 
 @Module({
   imports: [
-    UsersModule,
+    UserModule,
     TypeOrmModule.forRoot(typeormConfig),
-    PatientsModule,
+    PatientModule,
     AuthModule,
-    OrganizationsModule,
-    SystemsModule,
-    DeliveryRoutesModule,
-    StatusCasesModule,
-    RegionsModule,
+    OrganizationModule,
+    SystemModule,
+    DeliveryRouteModule,
+    StatusCaseModule,
+    RegionModule,
     CommitteeResultsModule,
-    PatientDecisionsModule,
+    PatientDecisionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

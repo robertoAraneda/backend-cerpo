@@ -1,5 +1,5 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { UsersService } from '../src/users/services/users.service';
+import { UserService } from '../src/user/services/user.service';
 import { Connection } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
@@ -7,31 +7,31 @@ import { AuthModule } from '../src/auth/auth.module';
 import { Role } from '../src/auth/role.enum';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import * as request from 'supertest';
-import { User } from '../src/users/entities/user.entity';
-import { UpdateUserDto } from '../src/users/dto/update-user.dto';
-import { UsersModule } from '../src/users/users.module';
-import { CreateUserDto } from '../src/users/dto/create-user.dto';
-import { UserStub } from '../src/users/stubs/user.stub';
-import { GetUsersFilterDto } from '../src/users/dto/get-users-filter.dto';
+import { User } from '../src/user/entities/user.entity';
+import { UpdateUserDto } from '../src/user/dto/update-user.dto';
+import { UserModule } from '../src/user/user.module';
+import { CreateUserDto } from '../src/user/dto/create-user.dto';
+import { UserStub } from '../src/user/stubs/user.stub';
+import { GetUsersFilterDto } from '../src/user/dto/get-users-filter.dto';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: UsersService;
+  let service: UserService;
   let connection: Connection;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, UsersModule],
+      imports: [AppModule, AuthModule, UserModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<UsersService>(UsersService);
+    service = moduleFixture.get<UserService>(UserService);
     connection = app.get(Connection);
 
     await connection.synchronize(true);
 
-    //const users = await service.getUsers({});
+    //const user = await service.getUsers({});
     await service.createUser({
       rut: '10669322-6',
       given: 'ROBERTO ALEJANDRO',
@@ -81,7 +81,7 @@ describe('UserController (e2e)', () => {
     expect(response.body.motherFamily).toBe(user.motherFamily);
   });
 
-  it('/users (GET)', async () => {
+  it('/user (GET)', async () => {
     const response = await request(app.getHttpServer())
       .get('/users')
       .set('Authorization', `Bearer ${authToken}`)
@@ -94,7 +94,7 @@ describe('UserController (e2e)', () => {
     expect(resources).toHaveLength(users.length);
   });
 
-  it('/users/:id (GET)', async () => {
+  it('/user/:id (GET)', async () => {
     const users = await service.getUsers({});
 
     const user: User = users[0];
@@ -109,7 +109,7 @@ describe('UserController (e2e)', () => {
     expect(resource.id).toBe(user.id);
   });
 
-  it('/users (GET) with parameters', async () => {
+  it('/user (GET) with parameters', async () => {
     const users = await service.getUsers({});
 
     const user: User = users[0];
@@ -136,7 +136,7 @@ describe('UserController (e2e)', () => {
     expect(user.id).toBe(resource.id);
   });
 
-  it('/user/:id (PATCH)', async () => {
+  it('/users/:id (PATCH)', async () => {
     const users = await service.getUsers({});
 
     const user: User = users[0];
@@ -159,7 +159,7 @@ describe('UserController (e2e)', () => {
     expect(resource.rut).toBe(updatedUserDto.rut);
   });
 
-  it('/user/:id (DELETE)', async () => {
+  it('/users/:id (DELETE)', async () => {
     const users = await service.getUsers({});
 
     const user: User = users[0];
@@ -175,7 +175,7 @@ describe('UserController (e2e)', () => {
   });
 
   it("It should throw a NotFoundException if user doesn't exist", async () => {
-    const unknownUuid = '123e4567-e89b-12d3-a456-426614174000';
+    const unknownUuid = 999;
 
     const response = await request(app.getHttpServer())
       .get(`/users/${unknownUuid}`)

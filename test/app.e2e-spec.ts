@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { UsersService } from '../src/users/services/users.service';
+import { UserService } from '../src/user/services/user.service';
 import { Connection } from 'typeorm';
 import { AuthModule } from '../src/auth/auth.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
@@ -11,7 +11,7 @@ import { Role } from '../src/auth/role.enum';
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: UsersService;
+  let service: UserService;
   let connection: Connection;
 
   beforeAll(async () => {
@@ -20,7 +20,7 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<UsersService>(UsersService);
+    service = moduleFixture.get<UserService>(UserService);
     connection = app.get(Connection);
     await connection.synchronize(true);
 

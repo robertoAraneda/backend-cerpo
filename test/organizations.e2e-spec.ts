@@ -1,36 +1,36 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { OrganizationsModule } from '../src/organizations/organizations.module';
+import { OrganizationModule } from '../src/organization/organization.module';
 import { Connection } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { CreateOrganizationDto } from '../src/organizations/dto/create-organization.dto';
+import { CreateOrganizationDto } from '../src/organization/dto/create-organization.dto';
 import { Role } from '../src/auth/role.enum';
-import { UsersService } from '../src/users/services/users.service';
-import { Organization } from '../src/organizations/entities/organization.entity';
-import { UpdateOrganizationDto } from '../src/organizations/dto/update-organization.dto';
-import { OrganizationsService } from '../src/organizations/services/organizations.service';
-import { OrganizationTypeEnum } from '../src/organizations/enums/organization-type.enum';
-import { OrganizationStub } from '../src/organizations/stubs/organization.stub';
+import { UserService } from '../src/user/services/user.service';
+import { Organization } from '../src/organization/entities/organization.entity';
+import { UpdateOrganizationDto } from '../src/organization/dto/update-organization.dto';
+import { OrganizationService } from '../src/organization/services/organization.service';
+import { OrganizationTypeEnum } from '../src/organization/enums/organization-type.enum';
+import { OrganizationStub } from '../src/organization/stubs/organization.stub';
 
-describe('OrganizationsController (e2e)', () => {
+describe('OrganizationController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: OrganizationsService;
-  let userService: UsersService;
+  let service: OrganizationService;
+  let userService: UserService;
   let connection: Connection;
   const BASE_URL = '/organizations';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, OrganizationsModule],
+      imports: [AppModule, AuthModule, OrganizationModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<OrganizationsService>(OrganizationsService);
-    userService = moduleFixture.get<UsersService>(UsersService);
+    service = moduleFixture.get<OrganizationService>(OrganizationService);
+    userService = moduleFixture.get<UserService>(UserService);
     connection = app.get(Connection);
 
     await connection.synchronize(true);
@@ -67,7 +67,7 @@ describe('OrganizationsController (e2e)', () => {
     authToken = response.body.access_token;
   });
 
-  it('/organizations (POST)', async () => {
+  it('/organization (POST)', async () => {
     const organization: CreateOrganizationDto = OrganizationStub;
 
     const response = await request(app.getHttpServer())
@@ -81,7 +81,7 @@ describe('OrganizationsController (e2e)', () => {
     expect(response.body.type).toBe(organization.type);
   });
 
-  it('/organizations (GET)', async () => {
+  it('/organization (GET)', async () => {
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
@@ -146,7 +146,7 @@ describe('OrganizationsController (e2e)', () => {
   });
 
   it("It should throw a NotFoundException if organization doesn't exist", async () => {
-    const unknownUuid = '123e4567-e89b-12d3-a456-426614174000';
+    const unknownUuid = 999;
 
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}/${unknownUuid}`)

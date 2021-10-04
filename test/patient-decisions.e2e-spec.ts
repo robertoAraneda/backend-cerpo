@@ -6,33 +6,31 @@ import { Connection } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { CreatePatientDecisionDto } from '../src/patient-decisions/dto/create-patient-decision.dto';
+import { CreatePatientDecisionDto } from '../src/patient-decision/dto/create-patient-decision.dto';
 import { Role } from '../src/auth/role.enum';
-import { UsersService } from '../src/users/services/users.service';
-import { PatientDecision } from '../src/patient-decisions/entities/patient-decision.entity';
-import { UpdatePatientDecisionDto } from '../src/patient-decisions/dto/update-patient-decision.dto';
-import { PatientDecisionsService } from '../src/patient-decisions/services/patient-decisions.service';
-import { CreatePatientDecisionStub } from '../src/patient-decisions/stubs/create-patient-decision.stub';
-import { PatientDecisionsModule } from '../src/patient-decisions/patient-decisions.module';
+import { UserService } from '../src/user/services/user.service';
+import { PatientDecision } from '../src/patient-decision/entities/patient-decision.entity';
+import { UpdatePatientDecisionDto } from '../src/patient-decision/dto/update-patient-decision.dto';
+import { PatientDecisionService } from '../src/patient-decision/services/patient-decision.service';
+import { CreatePatientDecisionStub } from '../src/patient-decision/stubs/create-patient-decision.stub';
+import { PatientDecisionModule } from '../src/patient-decision/patient-decision.module';
 
-describe('PatientDecisionsController (e2e)', () => {
+describe('PatientDecisionController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: PatientDecisionsService;
-  let userService: UsersService;
+  let service: PatientDecisionService;
+  let userService: UserService;
   let connection: Connection;
   const BASE_URL = '/patient-decisions';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, PatientDecisionsModule],
+      imports: [AppModule, AuthModule, PatientDecisionModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<PatientDecisionsService>(
-      PatientDecisionsService,
-    );
-    userService = moduleFixture.get<UsersService>(UsersService);
+    service = moduleFixture.get<PatientDecisionService>(PatientDecisionService);
+    userService = moduleFixture.get<UserService>(UserService);
     connection = app.get(Connection);
 
     await connection.synchronize(true);

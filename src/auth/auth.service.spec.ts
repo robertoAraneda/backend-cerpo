@@ -1,20 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UsersRepository } from '../users/repositories/users.repository';
+import { UserRepository } from '../user/repositories/user.repository';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 
 import * as config from 'config';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthLoginDto } from './dto/auth-login.dto';
-import { User } from '../users/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import { Role } from './role.enum';
 
 const jwtConfig = config.get('jwt');
 
 describe('AuthService', () => {
   let service: AuthService;
-  let userRepository: UsersRepository;
+  let userRepository: UserRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,11 +25,11 @@ describe('AuthService', () => {
           signOptions: { expiresIn: jwtConfig.expiresIn },
         }),
       ],
-      providers: [AuthService, JwtStrategy, UsersRepository],
+      providers: [AuthService, JwtStrategy, UserRepository],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
-    userRepository = module.get<UsersRepository>(UsersRepository);
+    userRepository = module.get<UserRepository>(UserRepository);
   });
 
   it('should be defined', () => {
@@ -38,7 +38,7 @@ describe('AuthService', () => {
 
   it('should return a user object when credentials are valid', async () => {
     const user: User = {
-      id: '8c26266f-3fe9-4b5b-bd88-bc2754415c12',
+      id: 1,
       given: 'Roberto',
       fatherFamily: 'Araneda',
       motherFamily: 'Espinoza',

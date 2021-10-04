@@ -1,39 +1,39 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { PatientsModule } from '../src/patients/patients.module';
+import { PatientModule } from '../src/patient/patient.module';
 import { Connection } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { PatientsService } from '../src/patients/services/patients.service';
-import { CreatePatientDto } from '../src/patients/dto/create-patient.dto';
+import { PatientService } from '../src/patient/services/patient.service';
+import { CreatePatientDto } from '../src/patient/dto/create-patient.dto';
 import { Role } from '../src/auth/role.enum';
-import { UsersService } from '../src/users/services/users.service';
-import { Patient } from '../src/patients/entities/patient.entity';
-import { UpdatePatientDto } from '../src/patients/dto/update-patient.dto';
+import { UserService } from '../src/user/services/user.service';
+import { Patient } from '../src/patient/entities/patient.entity';
+import { UpdatePatientDto } from '../src/patient/dto/update-patient.dto';
 
 describe('PatientController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: PatientsService;
-  let userService: UsersService;
+  let service: PatientService;
+  let userService: UserService;
   let connection: Connection;
   const BASE_URL = '/patients';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, PatientsModule],
+      imports: [AppModule, AuthModule, PatientModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<PatientsService>(PatientsService);
-    userService = moduleFixture.get<UsersService>(UsersService);
+    service = moduleFixture.get<PatientService>(PatientService);
+    userService = moduleFixture.get<UserService>(UserService);
     connection = app.get(Connection);
 
     await connection.synchronize(true);
 
-    //const patients = await service.getPatients({});
+    //const patient = await service.getPatients({});
     await userService.createUser({
       rut: '15654738-7',
       given: 'ROBERTO ALEJANDRO',
@@ -72,7 +72,7 @@ describe('PatientController (e2e)', () => {
     authToken = response.body.access_token;
   });
 
-  it('/patients (POST)', async () => {
+  it('/patient (POST)', async () => {
     const patient: CreatePatientDto = {
       rut: '15549763-7',
       address: 'JUAN ENRIQUE RODO 05080',
@@ -96,7 +96,7 @@ describe('PatientController (e2e)', () => {
     expect(response.body.motherFamily).toBe(patient.motherFamily);
   });
 
-  it('/patients (GET)', async () => {
+  it('/patient (GET)', async () => {
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
@@ -165,7 +165,7 @@ describe('PatientController (e2e)', () => {
   });
 
   it("It should throw a NotFoundException if patient doesn't exist", async () => {
-    const unknownUuid = '123e4567-e89b-12d3-a456-426614174000';
+    const unknownUuid = 999;
 
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}/${unknownUuid}`)

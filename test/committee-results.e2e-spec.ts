@@ -6,20 +6,20 @@ import { Connection } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { CreateCommitteeResultDto } from '../src/committee-results/dto/create-committee-result.dto';
+import { CreateCommitteeResultDto } from '../src/committee-result/dto/create-committee-result.dto';
 import { Role } from '../src/auth/role.enum';
-import { UsersService } from '../src/users/services/users.service';
-import { CommitteeResult } from '../src/committee-results/entities/committee-result.entity';
-import { UpdateCommitteeResultDto } from '../src/committee-results/dto/update-committee-result.dto';
-import { CommitteeResultsService } from '../src/committee-results/services/committee-results.service';
-import { CreateCommitteeResultStub } from '../src/committee-results/stubs/create-committee-result.stub';
-import { CommitteeResultsModule } from '../src/committee-results/committee-result.module';
+import { UserService } from '../src/user/services/user.service';
+import { CommitteeResult } from '../src/committee-result/entities/committee-result.entity';
+import { UpdateCommitteeResultDto } from '../src/committee-result/dto/update-committee-result.dto';
+import { CommitteeResultService } from '../src/committee-result/services/committee-result.service';
+import { CreateCommitteeResultStub } from '../src/committee-result/stubs/create-committee-result.stub';
+import { CommitteeResultsModule } from '../src/committee-result/committee-result.module';
 
-describe('CommitteeResultsController (e2e)', () => {
+describe('CommitteeResultController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: CommitteeResultsService;
-  let userService: UsersService;
+  let service: CommitteeResultService;
+  let userService: UserService;
   let connection: Connection;
   const BASE_URL = '/committee-results';
 
@@ -29,10 +29,8 @@ describe('CommitteeResultsController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<CommitteeResultsService>(
-      CommitteeResultsService,
-    );
-    userService = moduleFixture.get<UsersService>(UsersService);
+    service = moduleFixture.get<CommitteeResultService>(CommitteeResultService);
+    userService = moduleFixture.get<UserService>(UserService);
     connection = app.get(Connection);
 
     await connection.synchronize(true);

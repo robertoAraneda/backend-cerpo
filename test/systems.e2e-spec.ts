@@ -1,35 +1,35 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { SystemsModule } from '../src/systems/systems.module';
+import { SystemModule } from '../src/system/system.module';
 import { Connection } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { CreateSystemDto } from '../src/systems/dto/create-system.dto';
+import { CreateSystemDto } from '../src/system/dto/create-system.dto';
 import { Role } from '../src/auth/role.enum';
-import { UsersService } from '../src/users/services/users.service';
-import { System } from '../src/systems/entities/system.entity';
-import { UpdateSystemDto } from '../src/systems/dto/update-system.dto';
-import { SystemsService } from '../src/systems/services/systems.service';
-import { CreateSystemStub } from '../src/systems/stubs/create-system.stub';
+import { UserService } from '../src/user/services/user.service';
+import { System } from '../src/system/entities/system.entity';
+import { UpdateSystemDto } from '../src/system/dto/update-system.dto';
+import { SystemService } from '../src/system/services/system.service';
+import { CreateSystemStub } from '../src/system/stubs/create-system.stub';
 
-describe('SystemsController (e2e)', () => {
+describe('SystemController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: SystemsService;
-  let userService: UsersService;
+  let service: SystemService;
+  let userService: UserService;
   let connection: Connection;
   const BASE_URL = '/systems';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, SystemsModule],
+      imports: [AppModule, AuthModule, SystemModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<SystemsService>(SystemsService);
-    userService = moduleFixture.get<UsersService>(UsersService);
+    service = moduleFixture.get<SystemService>(SystemService);
+    userService = moduleFixture.get<UserService>(UserService);
     connection = app.get(Connection);
 
     await connection.synchronize(true);
@@ -64,7 +64,7 @@ describe('SystemsController (e2e)', () => {
     authToken = response.body.access_token;
   });
 
-  it('/systems (POST)', async () => {
+  it('/system (POST)', async () => {
     const system: CreateSystemDto = CreateSystemStub;
 
     const response = await request(app.getHttpServer())
@@ -76,7 +76,7 @@ describe('SystemsController (e2e)', () => {
     expect(response.body.name).toBe(system.name);
   });
 
-  it('/systems (GET)', async () => {
+  it('/system (GET)', async () => {
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
@@ -141,7 +141,7 @@ describe('SystemsController (e2e)', () => {
   });
 
   it("It should throw a NotFoundException if system doesn't exist", async () => {
-    const unknownUuid = '123e4567-e89b-12d3-a456-426614174000';
+    const unknownUuid = 999;
 
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}/${unknownUuid}`)
