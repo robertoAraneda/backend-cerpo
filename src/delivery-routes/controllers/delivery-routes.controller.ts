@@ -50,24 +50,24 @@ export class DeliveryRoutesController {
   }
 
   @Get(':id')
-  getDeliveryRouteById(@Param('id') id: string): Promise<DeliveryRoute> {
-    return this.deliveryRoutesService.getDeliveryRouteById(id);
+  getDeliveryRouteById(@Param('id') id: number): Promise<DeliveryRoute> {
+    return this.deliveryRoutesService.getDeliveryRouteById(+id);
   }
 
   @Patch(':id')
   @UsePipes(ValidationPipe)
   updateDeliveryRoute(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateDeliveryRouteDto: UpdateDeliveryRouteDto,
   ): Promise<DeliveryRoute> {
     return this.deliveryRoutesService.updateDeliveryRoute(
-      id,
+      +id,
       updateDeliveryRouteDto,
     );
   }
 
   @Delete(':id')
-  removeDeliveryRoute(@Param('id') id: string): Promise<void> {
-    return this.deliveryRoutesService.removeDeliveryRoute(id);
+  removeDeliveryRoute(@Param('id') id: number): Promise<void> {
+    return this.deliveryRoutesService.removeDeliveryRoute(+id);
   }
 }

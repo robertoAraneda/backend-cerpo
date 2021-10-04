@@ -6,11 +6,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsUUID } from 'class-validator';
 
-@Entity('delivery_routes')
-export class DeliveryRoute {
-  constructor(partial: Partial<DeliveryRoute>) {
+@Entity('patient_decisions')
+export class PatientDecision {
+  constructor(partial: Partial<PatientDecision>) {
     Object.assign(this, partial);
   }
 

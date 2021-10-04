@@ -1,35 +1,37 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { Connection } from 'typeorm';
 
-import { DeliveryRoutesModule } from '../src/delivery-routes/delivery-routes.module';
+import { Connection } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import { AuthLoginDto } from '../src/auth/dto/auth-login.dto';
 import { AuthModule } from '../src/auth/auth.module';
-import { CreateDeliveryRouteDto } from '../src/delivery-routes/dto/create-delivery-route.dto';
+import { CreatePatientDecisionDto } from '../src/patient-decisions/dto/create-patient-decision.dto';
 import { Role } from '../src/auth/role.enum';
 import { UsersService } from '../src/users/services/users.service';
-import { DeliveryRoute } from '../src/delivery-routes/entities/delivery-route.entity';
-import { UpdateDeliveryRouteDto } from '../src/delivery-routes/dto/update-delivery-route.dto';
-import { DeliveryRoutesService } from '../src/delivery-routes/services/delivery-routes.service';
-import { CreateDeliveryRouteStub } from '../src/delivery-routes/stubs/create-delivery-route.stub';
+import { PatientDecision } from '../src/patient-decisions/entities/patient-decision.entity';
+import { UpdatePatientDecisionDto } from '../src/patient-decisions/dto/update-patient-decision.dto';
+import { PatientDecisionsService } from '../src/patient-decisions/services/patient-decisions.service';
+import { CreatePatientDecisionStub } from '../src/patient-decisions/stubs/create-patient-decision.stub';
+import { PatientDecisionsModule } from '../src/patient-decisions/patient-decisions.module';
 
-describe('DeliveryRoutesController (e2e)', () => {
+describe('PatientDecisionsController (e2e)', () => {
   let app: INestApplication;
   let authToken;
-  let service: DeliveryRoutesService;
+  let service: PatientDecisionsService;
   let userService: UsersService;
   let connection: Connection;
-  const BASE_URL = '/delivery-routes';
+  const BASE_URL = '/patient-decisions';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, AuthModule, DeliveryRoutesModule],
+      imports: [AppModule, AuthModule, PatientDecisionsModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    service = moduleFixture.get<DeliveryRoutesService>(DeliveryRoutesService);
+    service = moduleFixture.get<PatientDecisionsService>(
+      PatientDecisionsService,
+    );
     userService = moduleFixture.get<UsersService>(UsersService);
     connection = app.get(Connection);
 
@@ -45,8 +47,8 @@ describe('DeliveryRoutesController (e2e)', () => {
       role: Role.ADMIN,
     });
 
-    await service.createDeliveryRoute({
-      name: 'DeliveryRoute name 1',
+    await service.createPatientDecision({
+      name: 'PatientDecision name 1',
     });
 
     await app.init();
@@ -65,19 +67,19 @@ describe('DeliveryRoutesController (e2e)', () => {
     authToken = response.body.access_token;
   });
 
-  it('/deliveryRoutes (POST)', async () => {
-    const deliveryRoute: CreateDeliveryRouteDto = CreateDeliveryRouteStub;
+  it('/patientDecisions (POST)', async () => {
+    const patientDecision: CreatePatientDecisionDto = CreatePatientDecisionStub;
 
     const response = await request(app.getHttpServer())
       .post(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(deliveryRoute)
+      .send(patientDecision)
       .expect(HttpStatus.CREATED);
 
-    expect(response.body.name).toBe(deliveryRoute.name);
+    expect(response.body.name).toBe(patientDecision.name);
   });
 
-  it('/deliveryRoutes (GET)', async () => {
+  it('/patientDecisions (GET)', async () => {
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
@@ -85,63 +87,63 @@ describe('DeliveryRoutesController (e2e)', () => {
 
     const resources = response.body;
 
-    const deliveryRoutes = await service.getDeliveryRoutes({});
+    const patientDecisions = await service.getPatientDecisions({});
 
-    expect(resources).toHaveLength(deliveryRoutes.length);
+    expect(resources).toHaveLength(patientDecisions.length);
   });
 
-  it('/deliveryRoute/:id (GET)', async () => {
-    const deliveryRoutes = await service.getDeliveryRoutes({});
+  it('/patientDecision/:id (GET)', async () => {
+    const patientDecisions = await service.getPatientDecisions({});
 
-    const deliveryRoute: DeliveryRoute = deliveryRoutes[0];
+    const patientDecision: PatientDecision = patientDecisions[0];
 
     const response = await request(app.getHttpServer())
-      .get(`${BASE_URL}/${deliveryRoute.id}`)
+      .get(`${BASE_URL}/${patientDecision.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
-    const resource: DeliveryRoute = response.body;
+    const resource: PatientDecision = response.body;
 
-    expect(resource.id).toBe(deliveryRoute.id);
+    expect(resource.id).toBe(patientDecision.id);
   });
 
-  it('/deliveryRoute/:id (PATCH)', async () => {
-    const deliveryRoutes = await service.getDeliveryRoutes({});
+  it('/patientDecision/:id (PATCH)', async () => {
+    const patientDecisions = await service.getPatientDecisions({});
 
-    const deliveryRoute: DeliveryRoute = deliveryRoutes[0];
+    const patientDecision: PatientDecision = patientDecisions[0];
 
-    const updatedDeliveryRouteDto: UpdateDeliveryRouteDto = {
-      name: 'new name deliveryRoute',
+    const updatedPatientDecisionDto: UpdatePatientDecisionDto = {
+      name: 'new name patientDecision',
     };
 
     const response = await request(app.getHttpServer())
-      .patch(`${BASE_URL}/${deliveryRoute.id}`)
+      .patch(`${BASE_URL}/${patientDecision.id}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(updatedDeliveryRouteDto)
+      .send(updatedPatientDecisionDto)
       .expect(HttpStatus.OK);
 
-    const resource: DeliveryRoute = response.body;
+    const resource: PatientDecision = response.body;
 
-    expect(resource.id).toBe(deliveryRoute.id);
-    expect(resource.name).toBe(updatedDeliveryRouteDto.name);
+    expect(resource.id).toBe(patientDecision.id);
+    expect(resource.name).toBe(updatedPatientDecisionDto.name);
   });
 
-  it('/deliveryRoute/:id (DELETE)', async () => {
-    const deliveryRoutes = await service.getDeliveryRoutes({});
+  it('/patientDecision/:id (DELETE)', async () => {
+    const patientDecisions = await service.getPatientDecisions({});
 
-    const deliveryRoute: DeliveryRoute = deliveryRoutes[0];
+    const patientDecision: PatientDecision = patientDecisions[0];
 
     const response = await request(app.getHttpServer())
-      .delete(`${BASE_URL}/${deliveryRoute.id}`)
+      .delete(`${BASE_URL}/${patientDecision.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
-    const resource: DeliveryRoute = response.body;
+    const resource: PatientDecision = response.body;
 
     expect(resource).toStrictEqual({});
   });
 
-  it("It should throw a NotFoundException if deliveryRoute doesn't exist", async () => {
+  it("It should throw a NotFoundException if patientDecision doesn't exist", async () => {
     const unknownUuid = 999;
 
     const response = await request(app.getHttpServer())
@@ -149,11 +151,11 @@ describe('DeliveryRoutesController (e2e)', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.NOT_FOUND);
 
-    const resource: DeliveryRoute = response.body;
+    const resource: PatientDecision = response.body;
 
     const errorResponseExample = {
       statusCode: 404,
-      message: `DeliveryRoute with ID "${unknownUuid}" not found`,
+      message: `PatientDecision with ID "${unknownUuid}" not found`,
       error: 'Not Found',
     };
 
@@ -162,13 +164,13 @@ describe('DeliveryRoutesController (e2e)', () => {
 
   it('It should throw a BadRequestException if the required parameters were not sent', async () => {
     //El nombre de la organización no es enviado en el request
-    const deliveryRoute = {
-      telecom: 'Telecom for deliveryRoute 1',
+    const patientDecision = {
+      telecom: 'Telecom for patientDecision 1',
     };
     const response = await request(app.getHttpServer())
       .post(`${BASE_URL}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send(deliveryRoute)
+      .send(patientDecision)
       .expect(HttpStatus.BAD_REQUEST);
 
     expect(response.body.error).toBe('Bad Request');

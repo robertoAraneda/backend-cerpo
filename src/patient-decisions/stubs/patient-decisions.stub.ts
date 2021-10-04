@@ -1,10 +1,10 @@
-import { DeliveryRoute } from '../entities/delivery-route.entity';
+import { PatientDecision } from '../entities/patient-decision.entity';
 
-const deliveryRoutes: DeliveryRoute[] = [
+const patientDecisions: PatientDecision[] = [
   {
     id: 1,
     active: true,
-    name: 'DeliveryRoute 1',
+    name: 'PatientDecision 1',
     createdAt: '2021-09-20T22:13:55.971Z',
     updatedAt: '2021-09-21T19:00:05.280Z',
     deletedAt: null,
@@ -12,7 +12,7 @@ const deliveryRoutes: DeliveryRoute[] = [
   {
     id: 2,
     active: true,
-    name: 'DeliveryRoute 2',
+    name: 'PatientDecision 2',
     createdAt: '2021-09-20T22:13:55.971Z',
     updatedAt: '2021-09-21T19:00:05.280Z',
     deletedAt: null,
@@ -20,20 +20,20 @@ const deliveryRoutes: DeliveryRoute[] = [
   {
     id: 3,
     active: true,
-    name: 'DeliveryRoute 3',
+    name: 'PatientDecision 3',
     createdAt: '2021-09-20T22:13:55.971Z',
     updatedAt: '2021-09-21T19:00:05.280Z',
     deletedAt: null,
   },
 ];
 
-const getOne = (): DeliveryRoute => deliveryRoutes[0];
+const getOne = (): PatientDecision => patientDecisions[0];
 
-const getAll = (): DeliveryRoute[] => deliveryRoutes;
+const getAll = (): PatientDecision[] => patientDecisions;
 
-const length: number = deliveryRoutes.length;
+const length: number = patientDecisions.length;
 
-export const DeliveryRoutesStub = {
+export const PatientDecisionsStub = {
   getAll,
   getOne,
   length,

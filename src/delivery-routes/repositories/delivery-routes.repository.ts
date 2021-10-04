@@ -29,7 +29,7 @@ export class DeliveryRoutesRepository extends Repository<DeliveryRoute> {
   }
 
   async updateDeliveryRoute(
-    id: string,
+    id: number,
     updateDeliveryRouteDto: UpdateDeliveryRouteDto,
   ): Promise<DeliveryRoute> {
     const deliveryRoute = await this.findOne(id);

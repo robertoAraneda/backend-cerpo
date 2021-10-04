@@ -32,7 +32,7 @@ export class DeliveryRoutesService {
     return await this.deliveryRoutesRepository.getDeliveryRoutes(filterDto);
   }
 
-  async getDeliveryRouteById(id: string) {
+  async getDeliveryRouteById(id: number) {
     const found = await this.deliveryRoutesRepository.findOne(id);
 
     if (!found) {
@@ -42,7 +42,7 @@ export class DeliveryRoutesService {
   }
 
   async updateDeliveryRoute(
-    id: string,
+    id: number,
     updateDeliveryRouteDto: UpdateDeliveryRouteDto,
   ) {
     return await this.deliveryRoutesRepository.updateDeliveryRoute(
@@ -51,7 +51,7 @@ export class DeliveryRoutesService {
     );
   }
 
-  async removeDeliveryRoute(id: string): Promise<void> {
+  async removeDeliveryRoute(id: number): Promise<void> {
     try {
       const deliveryRoute = await this.getDeliveryRouteById(id);
       await this.deliveryRoutesRepository.softRemove<DeliveryRoute>(

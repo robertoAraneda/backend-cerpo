@@ -92,6 +92,11 @@ $ yarn add @nestjs/jwt @nestjs/passport passport passport-jwt
 $ yarn add config      
 
 # add helmet
-$ yarn add helmet   
+$ yarn add helmet
+  
+# add merge coverage
+$yarn add -D fs-extra
+$yarn add -D istanbul-api
+
 ```
 

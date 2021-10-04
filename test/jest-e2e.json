@@ -4,11 +4,11 @@
   "rootDir": "..",
   "testPathIgnorePatterns": ["/node_modules/", "/src/"],
   "collectCoverageFrom": ["src/**"],
+  "coverageDirectory": "coverage/e2e",
   "coveragePathIgnorePatterns": [
     ".module.ts$",
     ".spec.ts$",
-    "src/main.ts",
-    ".stub.ts$"
+    "src/main.ts"
   ],
   "testRegex": ".e2e-spec.ts$",
   "transform": {

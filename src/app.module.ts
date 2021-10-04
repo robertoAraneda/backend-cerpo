@@ -12,6 +12,7 @@ import { DeliveryRoutesModule } from './delivery-routes/delivery-routes.module';
 import { StatusCasesModule } from './status-cases/status-cases.module';
 import { RegionsModule } from './regions/regions.module';
 import { CommitteeResultsModule } from './committee-results/committee-result.module';
+import { PatientDecisionsModule } from './patient-decisions/patient-decisions.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { CommitteeResultsModule } from './committee-results/committee-result.mod
     StatusCasesModule,
     RegionsModule,
     CommitteeResultsModule,
+    PatientDecisionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
