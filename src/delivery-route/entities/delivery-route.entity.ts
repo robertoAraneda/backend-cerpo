@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsUUID } from 'class-validator';
+
+import { Case } from '../../case/entities/case.entity';
 
 @Entity('delivery_routes')
 export class DeliveryRoute {
@@ -33,4 +35,7 @@ export class DeliveryRoute {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+
+  @OneToMany(() => Case, (cases) => cases.deliveryRoute)
+  cases: Case[];
 }

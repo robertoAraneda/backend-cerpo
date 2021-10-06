@@ -52,6 +52,7 @@ describe('AuthController', () => {
       deletedAt: null,
       salt: null,
       role: Role.ADMIN,
+      cases: [],
     };
 
     jest.spyOn(service, 'validateUser');
@@ -85,6 +86,7 @@ describe('AuthController', () => {
       deletedAt: null,
       salt: null,
       role: Role.ADMIN,
+      cases: [],
     };
 
     jest.spyOn(service, 'validateUser');

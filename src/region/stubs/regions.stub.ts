@@ -2,7 +2,7 @@ import { Region } from '../entities/region.entity';
 
 const regions: Region[] = [
   {
-    id: 1,
+    communes: [],
     active: true,
     name: 'Region 1',
     code: 'code 1',
@@ -11,7 +11,7 @@ const regions: Region[] = [
     deletedAt: null,
   },
   {
-    id: 2,
+    communes: [],
     active: true,
     name: 'Region 2',
     code: 'code 2',
@@ -20,7 +20,7 @@ const regions: Region[] = [
     deletedAt: null,
   },
   {
-    id: 3,
+    communes: [],
     active: true,
     name: 'Region 3',
     code: 'code 3',

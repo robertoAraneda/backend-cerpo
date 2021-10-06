@@ -15,7 +15,9 @@ export class RegionRepository extends Repository<Region> {
       query.andWhere('region.name ILIKE :name', { name: `%${name}%` });
     }
 
-    return await query.getMany();
+    return await query
+      .leftJoinAndSelect('region.communes', 'communes')
+      .getMany();
   }
 
   async createRegion(createRegionDto: CreateRegionDto): Promise<Region> {
@@ -25,10 +27,10 @@ export class RegionRepository extends Repository<Region> {
   }
 
   async updateRegion(
-    id: number,
+    code: string,
     updateRegionDto: UpdateRegionDto,
   ): Promise<Region> {
-    const region = await this.findOne(id);
+    const region = await this.findOne(code);
 
     this.merge(region, updateRegionDto);
 

@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { OrganizationTypeEnum } from '../enums/organization-type.enum';
+import { Case } from '../../case/entities/case.entity';
 
 @Entity('organizations')
 export class Organization {
@@ -41,4 +43,7 @@ export class Organization {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+
+  @OneToMany(() => Case, (cases) => cases.system)
+  cases: Case[];
 }

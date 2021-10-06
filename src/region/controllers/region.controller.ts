@@ -45,22 +45,22 @@ export class RegionController {
     return this.regionsService.getRegions(filterDto);
   }
 
-  @Get(':id')
-  getRegionById(@Param('id') id: number): Promise<Region> {
-    return this.regionsService.getRegionById(+id);
+  @Get(':code')
+  getRegionById(@Param('code') code: string): Promise<Region> {
+    return this.regionsService.getRegionById(code);
   }
 
-  @Patch(':id')
+  @Patch(':code')
   @UsePipes(ValidationPipe)
   updateRegion(
-    @Param('id') id: number,
+    @Param('code') code: string,
     @Body() updateRegionDto: UpdateRegionDto,
   ): Promise<Region> {
-    return this.regionsService.updateRegion(+id, updateRegionDto);
+    return this.regionsService.updateRegion(code, updateRegionDto);
   }
 
-  @Delete(':id')
-  removeRegion(@Param('id') id: number): Promise<void> {
-    return this.regionsService.removeRegion(+id);
+  @Delete(':code')
+  removeRegion(@Param('code') code: string): Promise<void> {
+    return this.regionsService.removeRegion(code);
   }
 }

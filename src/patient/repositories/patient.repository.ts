@@ -36,13 +36,24 @@ export class PatientRepository extends Repository<Patient> {
   }
 
   async createPatient(createPatientDto: CreatePatientDto): Promise<Patient> {
+    const checkIfRutExist = await this.findOne({ rut: createPatientDto.rut });
+
+    if (checkIfRutExist)
+      throw new ConflictException(
+        `Patient with this rut "${createPatientDto.rut}" already exists.`,
+      );
+
+    const checkIfEmailExist = await this.findOne({
+      email: createPatientDto.email,
+    });
+
+    if (checkIfEmailExist)
+      throw new ConflictException(
+        `Patient with this email "${createPatientDto.email}" already exists.`,
+      );
     const patient = new Patient(createPatientDto);
 
-    try {
-      return await this.save(patient);
-    } catch (exception) {
-      this.validateUniqueConstraint(exception, createPatientDto);
-    }
+    return await this.save(patient);
   }
 
   async updatePatient(
@@ -51,26 +62,24 @@ export class PatientRepository extends Repository<Patient> {
   ): Promise<Patient> {
     const patient = await this.findOne(id);
 
+    const checkIfRutExist = await this.findOne({ rut: updatePatientDto.rut });
+
+    if (checkIfRutExist && checkIfRutExist.id !== id)
+      throw new ConflictException(
+        `Patient with this rut "${updatePatientDto.rut}" already exists.`,
+      );
+
+    const checkIfEmailExist = await this.findOne({
+      email: updatePatientDto.email,
+    });
+
+    if (checkIfEmailExist && checkIfEmailExist.id !== id)
+      throw new ConflictException(
+        `Patient with this email "${updatePatientDto.email}" already exists.`,
+      );
+
     this.merge(patient, updatePatientDto);
 
-    try {
-      return await this.save(patient);
-    } catch (exception) {
-      this.validateUniqueConstraint(exception, updatePatientDto);
-    }
-  }
-
-  validateUniqueConstraint(exception, dto): any {
-    if (/(email)[\s\S]+(already exists)/.test(exception.detail)) {
-      throw new ConflictException(
-        `Patient with this email "${dto.email}" already exists.`,
-      );
-    }
-    if (/(rut)[\s\S]+(already exists)/.test(exception.detail)) {
-      throw new ConflictException(
-        `Patient with this rut "${dto.rut}" already exists.`,
-      );
-    }
-    return exception;
+    return await this.save(patient);
   }
 }

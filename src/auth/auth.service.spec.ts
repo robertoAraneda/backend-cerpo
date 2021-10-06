@@ -49,6 +49,7 @@ describe('AuthService', () => {
       updatedAt: '2021-09-21T19:00:05.280Z',
       deletedAt: null,
       salt: null,
+      cases: [],
       role: Role.ADMIN,
     };
 

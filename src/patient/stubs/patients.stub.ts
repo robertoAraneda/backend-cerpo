@@ -16,6 +16,7 @@ const patients: Patient[] = [
     createdAt: '2021-09-28T12:47:38.958Z',
     updatedAt: '2021-09-28T12:47:38.958Z',
     deletedAt: null,
+    cases: [],
   },
   {
     id: 2,
@@ -32,6 +33,7 @@ const patients: Patient[] = [
     createdAt: '2021-09-27T22:09:38.497Z',
     updatedAt: '2021-09-28T12:48:11.827Z',
     deletedAt: null,
+    cases: [],
   },
 ];
 

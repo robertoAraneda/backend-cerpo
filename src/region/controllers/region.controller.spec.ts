@@ -78,7 +78,7 @@ describe('RegionsController', () => {
         .spyOn(service, 'updateRegion')
         .mockImplementation(async () => result);
 
-      expect(await controller.updateRegion(result.id, updated)).toBe(result);
+      expect(await controller.updateRegion(result.code, updated)).toBe(result);
       expect(service.updateRegion).toHaveBeenCalled();
     });
   });
@@ -93,7 +93,7 @@ describe('RegionsController', () => {
         .spyOn(service, 'removeRegion')
         .mockImplementation(async () => result);
 
-      expect(await controller.removeRegion(region.id));
+      expect(await controller.removeRegion(region.code));
       expect(service.removeRegion).toHaveBeenCalled();
     });
   });

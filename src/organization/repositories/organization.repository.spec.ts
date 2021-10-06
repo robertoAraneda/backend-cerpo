@@ -17,7 +17,7 @@ describe('OrganizationsRepository', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [],
     }).compile();
-    db = await createMemDB([Organization]);
+    db = await createMemDB();
     repository = db.getCustomRepository<OrganizationRepository>(
       OrganizationRepository,
     );

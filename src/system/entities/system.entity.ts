@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Case } from '../../case/entities/case.entity';
 
-@Entity('system')
+@Entity('systems')
 export class System {
   constructor(partial: Partial<System>) {
     Object.assign(this, partial);
@@ -32,4 +34,7 @@ export class System {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+
+  @OneToMany(() => Case, (cases) => cases.system)
+  cases: Case[];
 }

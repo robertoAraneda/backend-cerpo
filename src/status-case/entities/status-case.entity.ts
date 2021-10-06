@@ -1,14 +1,15 @@
-import { IsUUID } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Case } from '../../case/entities/case.entity';
 
-@Entity('status_case')
+@Entity('status_cases')
 export class StatusCase {
   constructor(partial: Partial<StatusCase>) {
     Object.assign(this, partial);
@@ -39,4 +40,7 @@ export class StatusCase {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+
+  @OneToMany(() => Case, (cases) => cases.system)
+  cases: Case[];
 }

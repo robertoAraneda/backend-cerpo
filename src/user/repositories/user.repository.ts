@@ -41,6 +41,22 @@ export class UserRepository extends Repository<User> {
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const checkIfRutExist = await this.findOne({ rut: createUserDto.rut });
+
+    if (checkIfRutExist)
+      throw new ConflictException(
+        `User with this rut "${createUserDto.rut}" already exists.`,
+      );
+
+    const checkIfEmailExist = await this.findOne({
+      email: createUserDto.email,
+    });
+
+    if (checkIfEmailExist)
+      throw new ConflictException(
+        `User with this email "${createUserDto.email}" already exists.`,
+      );
+
     const user = new User(createUserDto);
 
     const salt = await bcrypt.genSalt();
@@ -48,15 +64,27 @@ export class UserRepository extends Repository<User> {
     user.password = await this.hashPassword(createUserDto.password, salt);
     user.salt = salt;
 
-    try {
-      return await this.save(user);
-    } catch (exception) {
-      this.validateUniqueConstraint(exception, createUserDto);
-    }
+    return await this.save(user);
   }
 
   async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
+
+    const checkIfRutExist = await this.findOne({ rut: updateUserDto.rut });
+
+    if (checkIfRutExist && checkIfRutExist.id !== id)
+      throw new ConflictException(
+        `User with this rut "${updateUserDto.rut}" already exists.`,
+      );
+
+    const checkIfEmailExist = await this.findOne({
+      email: updateUserDto.email,
+    });
+
+    if (checkIfEmailExist && checkIfEmailExist.id !== id)
+      throw new ConflictException(
+        `User with this email "${updateUserDto.email}" already exists.`,
+      );
 
     const salt = await bcrypt.genSalt();
 
@@ -69,25 +97,7 @@ export class UserRepository extends Repository<User> {
 
     this.merge(user, updateUserDto);
 
-    try {
-      return await this.save(user);
-    } catch (exception) {
-      this.validateUniqueConstraint(exception, updateUserDto);
-    }
-  }
-
-  validateUniqueConstraint(exception, dto): any {
-    if (/(email)[\s\S]+(already exists)/.test(exception.detail)) {
-      throw new ConflictException(
-        `User with this email "${dto.email}" already exists.`,
-      );
-    }
-    if (/(rut)[\s\S]+(already exists)/.test(exception.detail)) {
-      throw new ConflictException(
-        `User with this rut "${dto.rut}" already exists.`,
-      );
-    }
-    return exception;
+    return await this.save(user);
   }
 
   private async hashPassword(password: string, salt: string): Promise<string> {

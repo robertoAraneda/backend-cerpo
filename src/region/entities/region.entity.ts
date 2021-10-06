@@ -3,19 +3,20 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  PrimaryGeneratedColumn,
+  OneToMany,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsUUID } from 'class-validator';
+import { Commune } from '../../commune/entities/commune.entity';
 
-@Entity('region')
+@Entity('regions')
 export class Region {
   constructor(partial: Partial<Region>) {
     Object.assign(this, partial);
   }
 
-  @PrimaryGeneratedColumn({ comment: 'Identificador principal' })
-  id: number;
+  @PrimaryColumn({ comment: 'Identificador principal', unique: true })
+  code: string;
 
   @Column({
     default: true,
@@ -25,9 +26,6 @@ export class Region {
   @Column()
   name: string;
 
-  @Column()
-  code: string;
-
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;
 
@@ -36,4 +34,7 @@ export class Region {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+
+  @OneToMany(() => Commune, (communes) => communes.region, { eager: true })
+  communes: Commune[];
 }

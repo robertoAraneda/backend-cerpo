@@ -16,7 +16,7 @@ describe('RegionsRepository', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [],
     }).compile();
-    db = await createMemDB([Region]);
+    db = await createMemDB();
     repository = db.getCustomRepository<RegionRepository>(RegionRepository);
   });
 
@@ -90,7 +90,7 @@ describe('RegionsRepository', () => {
       };
 
       const updatedRegion: Region = await repository.updateRegion(
-        region.id,
+        region.code,
         updateRegionDto,
       );
 
@@ -109,7 +109,7 @@ describe('RegionsRepository', () => {
       await repository.softRemove(region);
 
       const getDeletedUser: Region = await repository.findOne({
-        where: { id: region.id },
+        where: { code: region.code },
         withDeleted: true,
       });
 

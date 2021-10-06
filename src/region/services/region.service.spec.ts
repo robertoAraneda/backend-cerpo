@@ -53,7 +53,7 @@ describe('RegionsService', () => {
 
       jest.spyOn(repository, 'findOne').mockImplementation(async () => result);
 
-      expect(await service.getRegionById(result.id)).toBe(result);
+      expect(await service.getRegionById(result.code)).toBe(result);
       expect(repository.findOne).toHaveBeenCalled();
     });
 
@@ -65,7 +65,7 @@ describe('RegionsService', () => {
         .mockImplementation(async () => undefined);
 
       try {
-        await service.getRegionById(result.id);
+        await service.getRegionById(result.code);
       } catch (e) {
         expect(e).toBeInstanceOf(NotFoundException);
       }
@@ -100,7 +100,7 @@ describe('RegionsService', () => {
         .spyOn(repository, 'updateRegion')
         .mockImplementation(async () => region);
 
-      expect(await service.updateRegion(region.id, updateRegionDto)).toBe(
+      expect(await service.updateRegion(region.code, updateRegionDto)).toBe(
         region,
       );
       expect(repository.updateRegion).toHaveBeenCalled();
@@ -119,7 +119,7 @@ describe('RegionsService', () => {
         .spyOn(service, 'getRegionById')
         .mockImplementation(async () => region);
 
-      expect(await service.removeRegion(region.id)).toBe(undefined);
+      expect(await service.removeRegion(region.code)).toBe(undefined);
       expect(repository.softRemove).toHaveBeenCalledTimes(1);
       expect(service.getRegionById).toHaveBeenCalledTimes(1);
     });

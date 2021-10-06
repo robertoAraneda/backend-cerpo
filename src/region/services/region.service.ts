@@ -25,22 +25,22 @@ export class RegionService {
     return await this.regionsRepository.getRegions(filterDto);
   }
 
-  async getRegionById(id: number) {
-    const found = await this.regionsRepository.findOne(id);
+  async getRegionById(code: string) {
+    const found = await this.regionsRepository.findOne(code);
 
     if (!found) {
-      throw new NotFoundException(`Region with ID "${id}" not found`);
+      throw new NotFoundException(`Region with code "${code}" not found`);
     }
     return found;
   }
 
-  async updateRegion(id: number, updateRegionDto: UpdateRegionDto) {
-    return await this.regionsRepository.updateRegion(id, updateRegionDto);
+  async updateRegion(code: string, updateRegionDto: UpdateRegionDto) {
+    return await this.regionsRepository.updateRegion(code, updateRegionDto);
   }
 
-  async removeRegion(id: number): Promise<void> {
+  async removeRegion(code: string): Promise<void> {
     try {
-      const region = await this.getRegionById(id);
+      const region = await this.getRegionById(code);
       await this.regionsRepository.softRemove<Region>(region);
     } catch (e) {
       throw new InternalServerErrorException(e);

@@ -13,6 +13,8 @@ import { StatusCaseModule } from './status-case/status-case.module';
 import { RegionModule } from './region/region.module';
 import { CommitteeResultsModule } from './committee-result/committee-result.module';
 import { PatientDecisionModule } from './patient-decision/patient-decision.module';
+import { CaseModule } from './case/case.module';
+import { CommuneModule } from './commune/commune.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { PatientDecisionModule } from './patient-decision/patient-decision.modul
     RegionModule,
     CommitteeResultsModule,
     PatientDecisionModule,
+    CaseModule,
+    CommuneModule,
   ],
   controllers: [AppController],
   providers: [AppService],

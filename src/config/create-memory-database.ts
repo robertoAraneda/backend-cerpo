@@ -1,6 +1,6 @@
 import { createConnection } from 'typeorm';
 
-export async function createMemDB(entities) {
+export async function createMemDB() {
   return createConnection({
     // name, // let TypeORM manage the connections
     type: 'postgres',
@@ -9,7 +9,7 @@ export async function createMemDB(entities) {
     username: 'develop',
     password: 'develop',
     port: 5432,
-    entities,
+    entities: [__dirname + '/../**/entities/*.entity{.ts,.js}'],
     dropSchema: true,
     synchronize: true,
   });

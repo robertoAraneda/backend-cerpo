@@ -17,7 +17,7 @@ describe('PatientsRepository', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [],
     }).compile();
-    db = await createMemDB([Patient]);
+    db = await createMemDB();
     repository = db.getCustomRepository<PatientRepository>(PatientRepository);
   });
 
@@ -111,14 +111,11 @@ describe('PatientsRepository', () => {
 
       await repository.createPatient(createPatientDto);
 
-      jest.spyOn(repository, 'validateUniqueConstraint');
-
       try {
         await repository.createPatient(createPatientDto);
       } catch (e) {
         expect(e).toBeInstanceOf(ConflictException);
       }
-      expect(repository.validateUniqueConstraint).toHaveBeenCalled();
     });
   });
 
@@ -188,14 +185,11 @@ describe('PatientsRepository', () => {
         rut: '15549763-7',
       };
 
-      jest.spyOn(repository, 'validateUniqueConstraint');
-
       try {
         await repository.updatePatient(patient.id, updatePatientDto);
       } catch (e) {
         expect(e).toBeInstanceOf(ConflictException);
       }
-      expect(repository.validateUniqueConstraint).toHaveBeenCalled();
     });
 
     it('should thown an ConflictException if one patient used ann existing email when is updating', async () => {
@@ -232,14 +226,11 @@ describe('PatientsRepository', () => {
         email: 'kuyenko@gmail.com',
       };
 
-      jest.spyOn(repository, 'validateUniqueConstraint');
-
       try {
         await repository.updatePatient(patient.id, updatePatientDto);
       } catch (e) {
         expect(e).toBeInstanceOf(ConflictException);
       }
-      expect(repository.validateUniqueConstraint).toHaveBeenCalled();
     });
   });
 

@@ -3,17 +3,23 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Case } from '../../case/entities/case.entity';
+import { DeliveryRoute } from '../../delivery-route/entities/delivery-route.entity';
+import { Region } from '../../region/entities/region.entity';
 
-@Entity('patient')
+@Entity('patients')
 export class Patient {
   constructor(partial: Partial<Patient>) {
     Object.assign(this, partial);
   }
 
-  @PrimaryGeneratedColumn({ comment: 'Identificador principal' })
+  @PrimaryGeneratedColumn({ comment: 'Identificador paciente' })
   id: number;
 
   @Column({
@@ -58,4 +64,14 @@ export class Patient {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+
+  @OneToMany(() => Case, (cases) => cases.deliveryRoute)
+  cases: Case[];
+
+  /*
+  @ManyToOne(() => Region, (region) => region.patient)
+  @JoinColumn({ name: 'region_id' })
+  region: Region;
+
+   */
 }

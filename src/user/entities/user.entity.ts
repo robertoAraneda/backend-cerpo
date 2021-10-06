@@ -4,13 +4,15 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { Role } from '../../auth/role.enum';
+import { Case } from '../../case/entities/case.entity';
 
-@Entity('user')
+@Entity('users')
 export class User {
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);
@@ -58,4 +60,7 @@ export class User {
     nullable: true,
   })
   role: Role;
+
+  @OneToMany(() => Case, (cases) => cases.system)
+  cases: Case[];
 }

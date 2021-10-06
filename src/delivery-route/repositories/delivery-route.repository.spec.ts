@@ -16,7 +16,7 @@ describe('DeliveryRoutesRepository', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [],
     }).compile();
-    db = await createMemDB([DeliveryRoute]);
+    db = await createMemDB();
     repository = db.getCustomRepository<DeliveryRouteRepository>(
       DeliveryRouteRepository,
     );

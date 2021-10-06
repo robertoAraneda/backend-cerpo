@@ -16,10 +16,9 @@ describe('StatusCasesRepository', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [],
     }).compile();
-    db = await createMemDB([StatusCase]);
-    repository = db.getCustomRepository<StatusCaseRepository>(
-      StatusCaseRepository,
-    );
+    db = await createMemDB();
+    repository =
+      db.getCustomRepository<StatusCaseRepository>(StatusCaseRepository);
   });
 
   afterEach(() => db.close());

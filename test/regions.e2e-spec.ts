@@ -96,13 +96,13 @@ describe('RegionController (e2e)', () => {
     const region: Region = regions[0];
 
     const response = await request(app.getHttpServer())
-      .get(`${BASE_URL}/${region.id}`)
+      .get(`${BASE_URL}/${region.code}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
     const resource: Region = response.body;
 
-    expect(resource.id).toBe(region.id);
+    expect(resource.code).toBe(region.code);
   });
 
   it('/region/:id (PATCH)', async () => {
@@ -115,14 +115,14 @@ describe('RegionController (e2e)', () => {
     };
 
     const response = await request(app.getHttpServer())
-      .patch(`${BASE_URL}/${region.id}`)
+      .patch(`${BASE_URL}/${region.code}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(updatedRegionDto)
       .expect(HttpStatus.OK);
 
     const resource: Region = response.body;
 
-    expect(resource.id).toBe(region.id);
+    expect(resource.code).toBe(region.code);
     expect(resource.name).toBe(updatedRegionDto.name);
   });
 
@@ -132,7 +132,7 @@ describe('RegionController (e2e)', () => {
     const region: Region = regions[0];
 
     const response = await request(app.getHttpServer())
-      .delete(`${BASE_URL}/${region.id}`)
+      .delete(`${BASE_URL}/${region.code}`)
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.OK);
 
@@ -142,7 +142,7 @@ describe('RegionController (e2e)', () => {
   });
 
   it("It should throw a NotFoundException if region doesn't exist", async () => {
-    const unknownUuid = 999;
+    const unknownUuid = 'unknown code';
 
     const response = await request(app.getHttpServer())
       .get(`${BASE_URL}/${unknownUuid}`)
@@ -153,7 +153,7 @@ describe('RegionController (e2e)', () => {
 
     const errorResponseExample = {
       statusCode: 404,
-      message: `Region with ID "${unknownUuid}" not found`,
+      message: `Region with code "${unknownUuid}" not found`,
       error: 'Not Found',
     };
 
