@@ -149,15 +149,9 @@ describe('RegionController (e2e)', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .expect(HttpStatus.NOT_FOUND);
 
-    const resource: Region = response.body;
+    const resource = response.body;
 
-    const errorResponseExample = {
-      statusCode: 404,
-      message: `Region with code "${unknownUuid}" not found`,
-      error: 'Not Found',
-    };
-
-    expect(errorResponseExample).toStrictEqual(resource);
+    expect(resource.statusCode).toStrictEqual(404);
   });
 
   it('It should throw a BadRequestException if the required parameters were not sent', async () => {
@@ -171,7 +165,7 @@ describe('RegionController (e2e)', () => {
       .send(region)
       .expect(HttpStatus.BAD_REQUEST);
 
-    expect(response.body.error).toBe('Bad Request');
+    expect(response.body.message).toBe('Bad Request Exception');
   });
 
   afterAll(async () => {

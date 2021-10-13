@@ -2,6 +2,8 @@ import {
   IsDateString,
   IsNotEmpty,
   IsNumber,
+  IsObject,
+  IsOptional,
   IsString,
   Length,
 } from 'class-validator';
@@ -41,11 +43,11 @@ export class CreateCaseDto {
   @IsNotEmpty() @IsString() @IsDateString() dueDateAt: string;
   @IsNotEmpty() @IsString() @IsDateString() psychologistVisitAt: string;
 
-  @IsNumber() committeeResult: CommitteeResult;
-  @IsNumber() deliveryRoute: DeliveryRoute;
-  @IsNumber() organization: Organization;
-  @IsNumber() patient: Patient;
-  @IsNumber() practitioner: User;
-  @IsNumber() statusCase: StatusCase;
-  @IsNumber() system: System;
+  @IsNotEmpty() @IsNumber() committeeResult: CommitteeResult;
+  @IsOptional() @IsNumber() deliveryRoute?: DeliveryRoute;
+  @IsNotEmpty() @IsNumber() organization: Organization;
+  @IsNotEmpty() @IsNumber() patient: Patient;
+  @IsNotEmpty() @IsNumber() practitioner: User;
+  @IsNotEmpty() @IsNumber() statusCase: StatusCase;
+  @IsNotEmpty() @IsNumber() system: System;
 }

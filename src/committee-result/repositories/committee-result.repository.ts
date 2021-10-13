@@ -3,9 +3,12 @@ import { CommitteeResult } from '../entities/committee-result.entity';
 import { CreateCommitteeResultDto } from '../dto/create-committee-result.dto';
 import { UpdateCommitteeResultDto } from '../dto/update-committee-result.dto';
 import { GetCommitteeResultsFilterDto } from '../dto/get-committee-results-filter.dto';
+import { Logger } from '@nestjs/common';
 
 @EntityRepository(CommitteeResult)
 export class CommitteeResultRepository extends Repository<CommitteeResult> {
+  private logger = new Logger('CommitteeResultRepository');
+
   async getCommitteeResults(
     filterDto: GetCommitteeResultsFilterDto,
   ): Promise<CommitteeResult[]> {
@@ -26,6 +29,10 @@ export class CommitteeResultRepository extends Repository<CommitteeResult> {
     createCommitteeResultDto: CreateCommitteeResultDto,
   ): Promise<CommitteeResult> {
     const committeeResult = new CommitteeResult(createCommitteeResultDto);
+
+    this.logger.verbose(
+      `User "${JSON.stringify(committeeResult)}" store result`,
+    );
 
     return await this.save(committeeResult);
   }

@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CaseRepository } from '../repositories/case.repository';
 import { Case } from '../entities/case.entity';
 import { GetCasesFilterDto } from '../dto/get-cases-filter.dto';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class CaseService {

@@ -30,7 +30,7 @@ const CreateCaseStub = (
     diagnosisGravida: '22',
     diagnosisPara: '33',
     doppler: 'doppler',
-    dueDateAt: '2021-09-20',
+    dueDateAt: '2022-03-20',
     echocardiogram: 'echocardiogram',
     estimatedDateConfinement: '2021-09-20',
     fetalMagneticResonance: 'fetalMagneticResonance',

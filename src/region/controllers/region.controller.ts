@@ -11,6 +11,7 @@ import {
   UsePipes,
   ValidationPipe,
   Logger,
+  UseFilters,
 } from '@nestjs/common';
 import { RegionService } from '../services/region.service';
 import { CreateRegionDto } from '../dto/create-region.dto';
@@ -22,10 +23,12 @@ import { GetUser } from '../../auth/decorators/get-user.decorator';
 import { UserAuthInterface } from '../../auth/interfaces/user-auth.interface';
 import { GetRegionsFilterDto } from '../dto/get-regions-filter.dto';
 import { Region } from '../entities/region.entity';
+import { HttpExceptionFilter } from '../../filters/http-exception.filter';
 
 @Controller({ version: '1', path: 'regions' })
 @Roles(Role.ADMIN)
 @UseGuards(JwtAuthGuard)
+@UseFilters(HttpExceptionFilter)
 export class RegionController {
   private logger = new Logger('RegionController');
   constructor(private readonly regionsService: RegionService) {}

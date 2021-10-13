@@ -11,6 +11,7 @@ import {
   UsePipes,
   ValidationPipe,
   Logger,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CaseService } from '../services/case.service';
 import { CreateCaseDto } from '../dto/create-case.dto';
@@ -22,6 +23,7 @@ import { GetUser } from '../../auth/decorators/get-user.decorator';
 import { UserAuthInterface } from '../../auth/interfaces/user-auth.interface';
 import { GetCasesFilterDto } from '../dto/get-cases-filter.dto';
 import { Case } from '../entities/case.entity';
+import { CaseTransformInterceptor } from '../interceptors/case-transform.interceptor';
 
 @Controller({ version: '1', path: 'cases' })
 @Roles(Role.ADMIN)
@@ -37,6 +39,7 @@ export class CaseController {
   }
 
   @Get()
+  @UseInterceptors(CaseTransformInterceptor)
   getCases(
     @GetUser() user: UserAuthInterface,
     @Query() filterDto: GetCasesFilterDto,

@@ -75,7 +75,7 @@ Nest is [MIT licensed](LICENSE).
 
 ## New packages
 ```bash
-# add typeorm
+# add typeorm para postgresql
 $ yarn add @nestjs/typeorm typeorm pg    
 
 # add class validator
@@ -95,8 +95,11 @@ $ yarn add config
 $ yarn add helmet
   
 # add merge coverage
-$yarn add -D fs-extra
-$yarn add -D istanbul-api
+$ yarn add -D fs-extra
+$ yarn add -D istanbul-api
+
+# add dayjs
+$ yarn add dayjs
 
 ```
 

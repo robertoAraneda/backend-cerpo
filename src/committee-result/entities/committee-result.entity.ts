@@ -15,7 +15,9 @@ export class CommitteeResult {
     Object.assign(this, partial);
   }
 
-  @PrimaryGeneratedColumn({ comment: 'Identificador principal' })
+  @PrimaryGeneratedColumn({
+    comment: 'Identificador principal resultado comité',
+  })
   id: number;
 
   @Column({
@@ -26,15 +28,15 @@ export class CommitteeResult {
   @Column()
   name: string;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: string;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: string;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp' })
   deletedAt: string;
 
-  @OneToMany(() => Case, (cases) => cases.system)
+  @OneToMany(() => Case, (cases) => cases.committeeResult)
   cases: Case[];
 }
