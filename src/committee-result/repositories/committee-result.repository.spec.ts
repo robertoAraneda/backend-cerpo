@@ -7,13 +7,6 @@ import { CommitteeResultsStub } from '../stubs/committee-results.stub';
 import { GetCommitteeResultsFilterDto } from '../dto/get-committee-results-filter.dto';
 import { UpdateCommitteeResultDto } from '../dto/update-committee-result.dto';
 import { CreateCommitteeResultStub } from '../stubs/create-committee-result.stub';
-import { Case } from '../../case/entities/case.entity';
-import { Patient } from '../../patient/entities/patient.entity';
-import { System } from '../../system/entities/system.entity';
-import { Organization } from '../../organization/entities/organization.entity';
-import { User } from '../../user/entities/user.entity';
-import { DeliveryRoute } from '../../delivery-route/entities/delivery-route.entity';
-import { StatusCase } from '../../status-case/entities/status-case.entity';
 
 describe('CommitteeResultsRepository', () => {
   let repository: CommitteeResultRepository;

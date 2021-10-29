@@ -23,6 +23,8 @@ import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { Role } from '../../auth/role.enum';
 import { UserAuthInterface } from '../../auth/interfaces/user-auth.interface';
+import { ApiPersonaService } from '../../api-persona/services/api-persona.service';
+import { GetApiPersonaDto } from '../../api-persona/dto/get-api-persona.dto';
 
 @Controller('users')
 @Roles(Role.ADMIN)
@@ -30,7 +32,16 @@ import { UserAuthInterface } from '../../auth/interfaces/user-auth.interface';
 @UseGuards(JwtAuthGuard)
 export class UserController {
   private logger = new Logger('UserController');
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly apiPersonaService: ApiPersonaService,
+  ) {}
+
+  @Get('search')
+  findUserByParams(@Param() filterDto: GetApiPersonaDto) {
+    return filterDto;
+    return this.apiPersonaService.getPersonInfo(filterDto);
+  }
 
   @Get()
   getUsers(

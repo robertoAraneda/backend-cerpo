@@ -15,11 +15,19 @@ import { CommitteeResultsModule } from './committee-result/committee-result.modu
 import { PatientDecisionModule } from './patient-decision/patient-decision.module';
 import { CaseModule } from './case/case.module';
 import { CommuneModule } from './commune/commune.module';
+import { ApiPersonaService } from './api-persona/services/api-persona.service';
+import { ApiPersonaModule } from './api-persona/api-persona.module';
+import { ConfigModule } from '@nestjs/config';
+import { CacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
     UserModule,
     TypeOrmModule.forRoot(typeormConfig),
+    ConfigModule.forRoot({
+      envFilePath: '.env.development.local',
+      isGlobal: true,
+    }),
     PatientModule,
     AuthModule,
     OrganizationModule,
@@ -31,8 +39,10 @@ import { CommuneModule } from './commune/commune.module';
     PatientDecisionModule,
     CaseModule,
     CommuneModule,
+    ApiPersonaModule,
+    CacheModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ApiPersonaService],
 })
 export class AppModule {}
