@@ -12,6 +12,7 @@ const timeout = 1000 * 5;
 @Injectable()
 export class ApiPersonaService {
   private logger = new Logger('ApiPersonaService');
+
   API_PERSONAS_URL = this.configService.get<string>('API_PERSONAS_URL');
   API_PERSONAS_SECRET = this.configService.get<string>('API_PERSONAS_SECRET');
   constructor(
@@ -20,6 +21,7 @@ export class ApiPersonaService {
   ) {}
 
   async getTokenApi() {
+    this.logger.verbose('consultando token');
     const url = `${this.API_PERSONAS_URL}/oauth/token`;
 
     const data = qs.stringify({ grant_type: 'client_credentials' });
@@ -60,14 +62,12 @@ export class ApiPersonaService {
   }
 
   protected async getToken() {
-    const cachedToken: Cache = await this.cacheService.findTokenByType(
-      'Bearer',
-    );
+    let cachedToken: Cache = await this.cacheService.findTokenByType('Bearer');
 
     if (!cachedToken) {
       const { expires_in, access_token, token_type } = await this.getTokenApi();
 
-      await this.cacheService.create({
+      cachedToken = await this.cacheService.create({
         expiresIn: expires_in,
         value: access_token,
         type: token_type,

@@ -8,6 +8,10 @@ import { User } from '../entities/user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UserStub } from '../stubs/user.stub';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { ApiPersonaService } from '../../api-persona/services/api-persona.service';
+import { ConfigService } from '@nestjs/config';
+import { CacheService } from '../../cache/services/cache.service';
+import { CacheRepository } from '../../cache/repositories/cache.repository';
 
 describe('UsersController', () => {
   let controller: UserController;
@@ -16,7 +20,14 @@ describe('UsersController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
-      providers: [UserService, UserRepository],
+      providers: [
+        UserService,
+        UserRepository,
+        ApiPersonaService,
+        ConfigService,
+        CacheService,
+        CacheRepository,
+      ],
     }).compile();
 
     controller = module.get<UserController>(UserController);

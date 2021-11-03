@@ -145,7 +145,6 @@ describe('CaseController (e2e)', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .send(caseEntity)
       .expect(HttpStatus.CREATED);
-
     expect(response.body.title).toBe(caseEntity.title);
   });
 

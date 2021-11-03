@@ -33,7 +33,7 @@ describe('UserController (e2e)', () => {
 
     //const user = await service.getUsers({});
     await service.createUser({
-      rut: '10669322-6',
+      rut: '15654738-7',
       given: 'ROBERTO ALEJANDRO',
       fatherFamily: 'ARANEDA',
       motherFamily: 'ESPINOZA',
@@ -46,7 +46,7 @@ describe('UserController (e2e)', () => {
   });
 
   it('return an authorization token', async () => {
-    const authInfo: AuthLoginDto = { rut: '10669322-6', password: 'admin' };
+    const authInfo: AuthLoginDto = { rut: '15654738-7', password: 'admin' };
     const response = await request(app.getHttpServer())
       .post('/auth/login')
       .send(authInfo);
@@ -172,6 +172,19 @@ describe('UserController (e2e)', () => {
     const resource: User = response.body;
 
     expect(resource).toStrictEqual({});
+  });
+
+  it('/users/search/params (SEARCH API PERSONA)', async () => {
+    const response = await request(app.getHttpServer())
+      .get(`/users/search/params?rut=16317005-1`)
+      .set('Authorization', `Bearer ${authToken}`)
+      .expect(HttpStatus.OK);
+
+    const resource = response.body;
+
+    expect(resource.respuesta.resultado.runPersona.toString()).toStrictEqual(
+      '16317005',
+    );
   });
 
   it("It should throw a NotFoundException if user doesn't exist", async () => {

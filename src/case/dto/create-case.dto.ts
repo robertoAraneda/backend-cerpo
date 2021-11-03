@@ -43,11 +43,11 @@ export class CreateCaseDto {
   @IsNotEmpty() @IsString() @IsDateString() dueDateAt: string;
   @IsNotEmpty() @IsString() @IsDateString() psychologistVisitAt: string;
 
-  @IsNotEmpty() @IsNumber() committeeResult: CommitteeResult;
-  @IsOptional() @IsNumber() deliveryRoute?: DeliveryRoute;
-  @IsNotEmpty() @IsNumber() organization: Organization;
-  @IsNotEmpty() @IsNumber() patient: Patient;
-  @IsNotEmpty() @IsNumber() practitioner: User;
-  @IsNotEmpty() @IsNumber() statusCase: StatusCase;
-  @IsNotEmpty() @IsNumber() system: System;
+  @IsNotEmpty() committeeResult: CommitteeResult;
+  @IsOptional() deliveryRoute?: DeliveryRoute;
+  @IsNotEmpty() organization: Organization;
+  @IsNotEmpty() patient: Patient;
+  @IsNotEmpty() practitioner: User;
+  @IsNotEmpty() statusCase: StatusCase;
+  @IsNotEmpty() system: System;
 }

@@ -37,9 +37,8 @@ export class UserController {
     private readonly apiPersonaService: ApiPersonaService,
   ) {}
 
-  @Get('search')
-  findUserByParams(@Param() filterDto: GetApiPersonaDto) {
-    return filterDto;
+  @Get('search/params')
+  findUserByParams(@Query() filterDto: GetApiPersonaDto) {
     return this.apiPersonaService.getPersonInfo(filterDto);
   }
 
